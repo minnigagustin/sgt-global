@@ -21,7 +21,7 @@ export const reportesGet = createAsyncThunk(
   ): Promise<any> => {
     try {
       const url =
-        "https://tamitut.com/PAYA/facturas/categorias_desglose_api.php";
+        "categorias_desglose_api.php";
 
       const formData = new FormData();
       if (nombreProveedor !== null) {
@@ -34,7 +34,7 @@ export const reportesGet = createAsyncThunk(
         formData.append("fechaFin", fechaFin);
       }
 
-      const response = await axios.post(url, formData);
+      const response = await AxiosUrl.post(url, formData);
       console.log(response.data, "esto llego");
       return response.data;
     } catch (error) {

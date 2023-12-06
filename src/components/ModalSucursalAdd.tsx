@@ -25,6 +25,7 @@ import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalSucursalAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -74,9 +75,9 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
     formData.append("token", token); // Agrega el grupo al FormData
     formData.append("ALIAS", alias); // Agrega el grupo al FormData
 
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/sucursales_editar_api.php",
+        "sucursales_editar_api.php",
         formData
       )
       .then((data) => {

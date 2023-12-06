@@ -9,8 +9,8 @@ export const sucursalesGet = createAsyncThunk(
   "user/sucursles/",
   async (_, { rejectWithValue }) => {
     try {
-      const response: any = await axios.post(
-        `https://tamitut.com/PAYA/facturas/sucursales_api.php`
+      const response: any = await AxiosUrl.post(
+        `sucursales_api.php`
       );
       //@ts-ignore
       console.log(response.data, "esto llegos");

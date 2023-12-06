@@ -31,6 +31,7 @@ import { productosGet } from "@component/store/productosSlice";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { certificadosGet } from "@component/store/certificadosSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const DeleteCertificado = ({
   isOpen,
@@ -43,8 +44,8 @@ const DeleteCertificado = ({
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `https://tamitut.com/PAYA/facturas/certificados_editar_api.php?id=${item.id}`
+      await AxiosUrl.delete(
+        `certificados_editar_api.php?id=${item.id}`
       );
       // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
       dispatch(certificadosGet());

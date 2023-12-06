@@ -26,6 +26,7 @@ import { AppDispatch } from "@component/store";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { usuariosGet } from "@component/store/usuariosSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalUsuarioEdit = ({ person, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -79,9 +80,9 @@ const ModalUsuarioEdit = ({ person, onClose }: any) => {
     formData.append("apellido", apellido); // Agrega el nombre al FormData
 
     formData.append("id", id); // Agrega el nombre al FormData
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/usuarios_editar_api.php",
+        "usuarios_editar_api.php",
         formData
       )
       .then((data) => {

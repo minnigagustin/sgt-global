@@ -28,14 +28,15 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const DeleteProduct = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
   const dispatch: AppDispatch = useDispatch();
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `https://tamitut.com/PAYA/facturas/productos_editar_api.php?id=${item.id}`
+      await AxiosUrl.delete(
+        `productos_editar_api.php?id=${item.id}`
       );
       // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
       dispatch(productosGet());

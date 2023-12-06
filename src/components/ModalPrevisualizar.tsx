@@ -28,6 +28,7 @@ import { productosGet } from "@component/store/productosSlice";
 import moment from "moment";
 import { ventasGet } from "@component/store/proyeccionSlice";
 import { facturasGet } from "@component/store/facturacionSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 const ModalPrevisualizar = ({
   data,
   fecha,
@@ -69,9 +70,9 @@ const ModalPrevisualizar = ({
       console.log("iterando: " + value);
     }
 
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/facturas_editar_api.php",
+        "facturas_editar_api.php",
         formData
       )
       .then((data) => {

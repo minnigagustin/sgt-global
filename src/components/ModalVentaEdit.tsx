@@ -27,6 +27,7 @@ import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { productosGet } from "@component/store/productosSlice";
 import moment from "moment";
 import { ventasGet } from "@component/store/proyeccionSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalVentaEdit = ({ venta, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -64,9 +65,9 @@ const ModalVentaEdit = ({ venta, onClose }: any) => {
     console.log(monto, 'el nuevo monto')
     formData.append("id", id); // Agrega el nombre al FormData
 
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/venta_editar_api.php",
+        "venta_editar_api.php",
         formData
       )
       .then((data) => {

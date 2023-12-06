@@ -24,6 +24,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@component/store";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalProveedorEdit = ({ person, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -80,9 +81,9 @@ const ModalProveedorEdit = ({ person, onClose }: any) => {
     formData.append("RUC", RUC); // Agrega el grupo al FormData
     formData.append("DV", DV); // Agrega el grupo al FormData
     formData.append("API", API); // Agrega el grupo al FormData
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/proveedores_editar_api.php",
+        "proveedores_editar_api.php",
         formData
       )
       .then((data) => {

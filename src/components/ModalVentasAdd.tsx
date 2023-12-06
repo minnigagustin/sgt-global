@@ -30,6 +30,7 @@ import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { usuariosGet } from "@component/store/usuariosSlice";
 import { certificadosGet } from "@component/store/certificadosSlice";
 import { proyeccionGet } from "@component/store/proyeccionSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalVentasAdd = ({ sucursal, onClose }: any) => {
   const [venta, setVenta] = useState(""); // Estado para el campo "venta"
@@ -52,8 +53,8 @@ const ModalVentasAdd = ({ sucursal, onClose }: any) => {
     formData.append("id_sucursal", sucursal.id_sucursal); // Agrega "periodo_final" al FormData
     formData.append("nombre_sucursal", sucursal.nombre_sucursal); // Agrega "periodo_final" al FormData
 
-    axios
-      .post("https://tamitut.com/PAYA/facturas/ventas_editar_api.php", formData)
+    AxiosUrl
+      .post("ventas_editar_api.php", formData)
       .then((data) => {
         dispatch(proyeccionGet({}));
         console.log(data);

@@ -30,14 +30,15 @@ import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const DeleteSucursal = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
   const dispatch: AppDispatch = useDispatch();
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `https://tamitut.com/PAYA/facturas/sucursales_editar_api.php?id=${item.id}`
+      await AxiosUrl.delete(
+        `sucursales_editar_api.php?id=${item.id}`
       );
       // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
       dispatch(sucursalesGet());

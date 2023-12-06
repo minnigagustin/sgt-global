@@ -29,6 +29,7 @@ import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { usuariosGet } from "@component/store/usuariosSlice";
 import { certificadosGet } from "@component/store/certificadosSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalCertificadoAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -90,9 +91,9 @@ const ModalCertificadoAdd = ({ product, onClose }: any) => {
     formData.append("cliente", cliente); // Agrega el nombre al FormData
     formData.append("estado", estado); // Agrega el nombre al FormData
 
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/certificados_editar_api.php",
+        "certificados_editar_api.php",
         formData
       )
       .then((data) => {

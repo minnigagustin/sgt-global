@@ -18,6 +18,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useAuthStore } from "@component/stores/auth";
 import { useRouter } from "next/router";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,8 +37,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await axios
-        .post(`https://tamitut.com/PAYA/facturas/nacion_login_api.php`, {
+      const data = await AxiosUrl
+        .post(`nacion_login_api.php`, {
           usuario: username,
           password: password,
         })

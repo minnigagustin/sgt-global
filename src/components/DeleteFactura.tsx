@@ -30,14 +30,15 @@ import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { facturasGet } from "@component/store/facturacionSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const DeleteFactura = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
   const dispatch: AppDispatch = useDispatch();
 
   const handleDelete = async () => {
     try {
-      await axios.delete(
-        `https://tamitut.com/PAYA/facturas/eliminar_factura_api.php?id=${item.id}`
+      await AxiosUrl.delete(
+        `eliminar_factura_api.php?id=${item.id}`
       );
       // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
       dispatch(facturasGet());

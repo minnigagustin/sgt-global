@@ -37,6 +37,7 @@ import { sucursalesGet } from "@component/store/sucursalesSlice";
 import InputFactura from "./Input";
 import { FiEye } from "react-icons/fi";
 import ModalPrevisualizar from "./ModalPrevisualizar";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalFacturaAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -166,9 +167,9 @@ const ModalFacturaAdd = ({ product, onClose }: any) => {
       console.log("iterando: " + value);
     }
 
-    axios
+    AxiosUrl
       .post(
-        "https://tamitut.com/PAYA/facturas/facturas_editar_api.php",
+        "facturas_editar_api.php",
         formData
       )
       .then((data) => {
