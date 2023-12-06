@@ -68,7 +68,7 @@ export default function Login() {
             justify={"center"}
             align={"center"}
           >
-            <Image src="./nacion-new-logo.png" w={200} mb={4} />
+            {/* <Image src="./nacion-new-logo.png" w={200} mb={4} /> */}
             <Stack spacing={4} boxShadow="2xl" p={14} borderRadius={8}>
               <Heading fontSize={"xl"} color={"#b032e7"}>
                 INGRESE SU USUARIO Y CONTRASEÑA
