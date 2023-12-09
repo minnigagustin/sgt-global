@@ -149,7 +149,7 @@ export default function Home() {
               type="Productos"
               onEdit={openModal}
               onDelete={onOpenDelete}
-              list={productos.filter(
+              list={productos?.filter(
                 (item: any) =>
                   item.nombre
                     .toLowerCase()

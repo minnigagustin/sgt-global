@@ -175,7 +175,7 @@ export default function Home() {
               type="Facturas"
               onEdit={openModal}
               onDelete={onOpenDelete}
-              list={facturas.filter((item: any) =>
+              list={facturas?.filter((item: any) =>
                 item.nombre_cliente
                   .toLowerCase()
                   .includes(searchQuery.toLowerCase())
