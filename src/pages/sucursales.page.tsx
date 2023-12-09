@@ -193,7 +193,7 @@ export default function Home() {
               type="Productos"
               onEdit={openModal}
               onDelete={onOpenDelete}
-              list={sucursales.filter(
+              list={sucursales?.filter(
                 (item: any) =>
                   item.ALIAS.toLowerCase().includes(
                     searchQuery.toLowerCase()
