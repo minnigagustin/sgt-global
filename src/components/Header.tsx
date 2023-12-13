@@ -191,13 +191,17 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {/* Contenido del encabezado */}
       <Box h="full" display="flex" flexDirection="column">
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          {/* <Image
-            objectFit="contain"
-            src="/logo.png"
-            w={{ base: "30%", md: "70%" }}
-            h="100%"
-          /> */}
-          <Text>{process.env.NAME_COMMERCE}</Text>
+          {process.env.LOGO_COMMERCE ? (
+            <Image
+              objectFit="contain"
+              src={process.env.LOGO_COMMERCE}
+              w={{ base: "30%", md: "70%" }}
+              h="80%"
+            />
+          ) : (
+            <Text>{process.env.NAME_COMMERCE}</Text>
+          )}
+
           <CloseButton
             display={{ base: "flex", md: "none" }}
             onClick={onClose}

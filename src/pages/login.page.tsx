@@ -37,12 +37,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await AxiosUrl
-        .post(`nacion_login_api.php`, {
-          usuario: username,
-          password: password,
-        })
-        .then((response) => response.data);
+      const data = await AxiosUrl.post(`nacion_login_api.php`, {
+        usuario: username,
+        password: password,
+      }).then((response) => response.data);
       login(data);
       router.push("/");
     } catch (e) {
@@ -68,7 +66,9 @@ export default function Login() {
             justify={"center"}
             align={"center"}
           >
-            {/* <Image src="./nacion-new-logo.png" w={200} mb={4} /> */}
+            {process.env.LOGO_COMMERCE && (
+              <Image src={process.env.LOGO_COMMERCE} w={200} mb={4} />
+            )}
             <Stack spacing={4} boxShadow="2xl" p={14} borderRadius={8}>
               <Heading fontSize={"xl"} color={"#b032e7"}>
                 INGRESE SU USUARIO Y CONTRASEÑA

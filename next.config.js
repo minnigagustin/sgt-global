@@ -5,6 +5,7 @@ const nextConfig = {
   env: {
     URL_BACKEND: "https://admin.yappastore.com/panda/",
     NAME_COMMERCE: "COMERCIO 2",
+    LOGO_COMMERCE: "./nacion-new-logo.png",
   },
 };
 
