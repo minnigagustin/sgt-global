@@ -13,6 +13,8 @@ import {
   Stack,
   Image,
   Box,
+  Text,
+  Highlight,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
@@ -49,6 +51,8 @@ export default function Login() {
       setLoading(false);
     }
   };
+  const commerceName = `${process.env.NAME_COMMERCE}!` || "";
+  const welcomeText = `Bienvenido ${commerceName}`;
   return (
     <>
       <Head>
@@ -58,6 +62,32 @@ export default function Login() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
+        <Flex
+          p={8}
+          flex={1}
+          align={"center"}
+          justify={"center"}
+          display={{ base: "none", md: "flex" }}
+          bg={"#00ccbb"}
+        >
+          <Stack spacing={4} w={"100%"} align={"center"} justify={"center"}>
+            <Image
+              display={{ base: "none", md: "flex" }}
+              align={"center"}
+              src="./sgtblanco.png"
+              w={"60%"}
+            />
+            <Heading fontSize={"2xl"} color={"black.500"} lineHeight="tall">
+              <Highlight
+                query={commerceName}
+                styles={{ px: "2", py: "1", bg: "white" }}
+              >
+                {welcomeText}
+              </Highlight>
+            </Heading>
+          </Stack>
+        </Flex>
+
         <Flex p={8} flex={1} align={"center"} justify={"center"}>
           <Stack
             spacing={4}
@@ -66,56 +96,58 @@ export default function Login() {
             justify={"center"}
             align={"center"}
           >
-            {process.env.LOGO_COMMERCE && (
-              <Image src={process.env.LOGO_COMMERCE} w={200} mb={4} />
-            )}
-            <Stack spacing={4} boxShadow="2xl" p={14} borderRadius={8}>
-              <Heading fontSize={"xl"} color={"#b032e7"}>
-                INGRESE SU USUARIO Y CONTRASEÑA
-              </Heading>
-              <FormControl id="email">
-                <Input
-                  type="text"
-                  placeholder="Usuario"
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </FormControl>
-              <FormControl id="password">
-                <Input
-                  placeholder="Contraseña"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </FormControl>
-              <Stack spacing={6}>
-                {error && !loading && (
-                  <div>
-                    {error && (
-                      <Box
-                        color="white"
-                        bg="red"
-                        p={4}
-                        borderRadius={4}
-                        fontWeight="bold"
-                      >
-                        Usuario o contraseña incorrectos
-                      </Box>
-                    )}
-                  </div>
-                )}
-                <Button
-                  isLoading={loading}
-                  loadingText="Ingresando"
-                  type="submit"
-                  colorScheme={"blue"}
-                  variant={"solid"}
-                  onClick={handleSubmit}
-                  bg={"#b032e7"}
-                  w="full"
-                >
-                  Iniciar
-                </Button>
-              </Stack>
+            <Image
+              display={{ base: "flex", md: "none" }}
+              align={"center"}
+              src="./sgt.png"
+              mb={8}
+              w={"60%"}
+            />
+            <Heading fontSize={"xl"} color={"black.500"}>
+              INGRESE SU USUARIO Y CONTRASEÑA
+            </Heading>
+            <FormControl id="email">
+              <Input
+                type="text"
+                placeholder="Usuario"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="password">
+              <Input
+                placeholder="Contraseña"
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormControl>
+            <Stack spacing={6} w={"100%"}>
+              {error && !loading && (
+                <div>
+                  {error && (
+                    <Box
+                      color="white"
+                      bg="red"
+                      p={4}
+                      borderRadius={4}
+                      fontWeight="bold"
+                    >
+                      Usuario o contraseña incorrectos
+                    </Box>
+                  )}
+                </div>
+              )}
+              <Button
+                isLoading={loading}
+                loadingText="Ingresando"
+                type="submit"
+                colorScheme={"blue"}
+                variant={"solid"}
+                onClick={handleSubmit}
+                w={"100%"}
+                bg={"#00ccbb"}
+              >
+                Iniciar
+              </Button>
             </Stack>
           </Stack>
         </Flex>

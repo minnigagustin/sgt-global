@@ -303,8 +303,16 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         w="40%"
         h="100%"
       /> */}
-      <Text>{process.env.NAME_COMMERCE}</Text>
-
+      {process.env.LOGO_COMMERCE ? (
+        <Image
+          objectFit="contain"
+          src={process.env.LOGO_COMMERCE}
+          w={{ base: "30%", md: "70%" }}
+          h="80%"
+        />
+      ) : (
+        <Text>{process.env.NAME_COMMERCE}</Text>
+      )}
       <HStack spacing={{ base: "0", md: "6" }}>
         <Flex alignItems={"center"}>
           <Menu>
