@@ -22,6 +22,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const ModalProductAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -65,11 +66,7 @@ const ModalProductAdd = ({ product, onClose }: any) => {
     //@ts-ignore
     formData.append("precio", precio);
 
-    axios
-      .post(
-        "https://tamitut.com/PAYA/facturas/productos_editar_api.php",
-        formData
-      )
+    AxiosUrl.post("productos_editar_api.php", formData)
       .then((data) => {
         dispatch(productosGet());
         console.log(data);

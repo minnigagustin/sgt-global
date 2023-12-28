@@ -17,7 +17,12 @@ import { FiCamera, FiList, FiMoon, FiTrello, FiTruck } from "react-icons/fi";
 import ButtonFacturacion from "./ButtonFacturacion";
 import ButtonEscaner from "./ButtonEscaner";
 
-export default function CardProveedoresEscaner({ item, key, onOpen }: any) {
+export default function CardProveedoresEscaner({
+  item,
+  key,
+  onOpen,
+  onAdd,
+}: any) {
   const router = useRouter();
 
   return (
@@ -76,7 +81,23 @@ export default function CardProveedoresEscaner({ item, key, onOpen }: any) {
           >
             <Icon as={FiCamera} mr={2} />
             Escanear
-          </Button>{" "}
+          </Button>
+          <Button
+            w={"full"}
+            onClick={() => onAdd(item)}
+            loadingText="Cargando..."
+            bg={useColorModeValue("purple.500", "gray.900")}
+            color={"white"}
+            rounded={"md"}
+            mt={4}
+            _hover={{
+              transform: "translateY(-2px)",
+              boxShadow: "lg",
+            }}
+          >
+            <Icon as={FiCamera} mr={2} />
+            Ingresar Manual
+          </Button>
         </Box>
       </Box>
     </Center>

@@ -71,7 +71,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Proyección", path: "/proyeccion", icon: FiArrowUpRight },
   { name: "Ventas", path: "/ventas", icon: FiDollarSign },
 
-  { name: "Escanear Facturas", path: "/escanear", icon: FiEye },
+  { name: "Ingresar Facturas", path: "/escanear", icon: FiEye },
   { name: "Sucursales", path: "/sucursales", icon: FiHeart },
   {
     name: "Usuarios",

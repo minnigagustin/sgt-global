@@ -89,6 +89,8 @@ import moment from "moment";
 import "moment/locale/es"; // Importa el paquete de idioma en español
 import CardProveedoresEscaner from "@component/components/CardProveedoresEscaner";
 import ModalScanAdd from "@component/components/ModalScanAdd";
+import ModalFacturaAdd from "@component/components/ModalFacturaAdd";
+import ModalManualAdd from "@component/components/ModalManualAdd";
 const CardChart = dynamic(
   () => {
     return import("@component/components/CardChart");
@@ -110,6 +112,12 @@ export default function Home() {
     new Date(),
     new Date(),
   ]);
+
+  const {
+    isOpen: isOpenAdd,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
+  } = useDisclosure();
 
   const {
     isOpen: isOpenScan,
@@ -177,11 +185,9 @@ export default function Home() {
     { nombre: "Diciembre", numero: 12 },
   ];
 
-  // Filtra los empleados que tienen el rol de "administrador"
   const proveedoresinsumos = proveedoresTotales.filter(
-    (item: any) => item.tipo === "insumo"
+    (item: any) => item.tipo === "insumos" || item.tipo === "insumo"
   );
-
   // Filtra los empleados que NO tienen el rol de "administrador"
   const proveedoresoperacionales = proveedoresTotales.filter(
     (item: any) => item.tipo === "operacionales"
@@ -193,6 +199,13 @@ export default function Home() {
     console.log(person);
     setPerson(person);
     onOpenScan();
+  };
+
+  const openModalAdd = (person: any) => {
+    console.log("eladio");
+    console.log(person);
+    setPerson(person);
+    onOpenAdd();
   };
 
   return (
@@ -210,6 +223,12 @@ export default function Home() {
             <ModalOverlay />
             <ModalContent w={"90%"}>
               <ModalScanAdd person={person} onClose={onCloseScan} />
+            </ModalContent>
+          </Modal>
+          <Modal onClose={onCloseAdd} isOpen={isOpenAdd} isCentered>
+            <ModalOverlay />
+            <ModalContent w={"90%"}>
+              <ModalManualAdd onClose={onCloseAdd} />
             </ModalContent>
           </Modal>
           <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} spacing="24px">
@@ -246,6 +265,7 @@ export default function Home() {
                         item={item}
                         key={key}
                         onOpen={openModal}
+                        onAdd={openModalAdd}
                       />
                     ))}
                 </SimpleGrid>
@@ -256,21 +276,25 @@ export default function Home() {
                 <Text fontSize={"2xl"} mb={-3} mt={2}>
                   Gastos Operacionales
                 </Text>
-                <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} spacing="24px">
-                  {proveedoresoperacionales
-                    ?.filter((item: any) =>
-                      item.nombre
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase())
-                    )
-                    ?.map((item: any, key: any) => (
-                      <CardProveedoresEscaner
-                        item={item}
-                        key={key}
-                        onOpen={openModal}
-                      />
-                    ))}
-                </SimpleGrid>
+                {proveedoresoperacionales?.length > 0 ? (
+                  <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} spacing="24px">
+                    {proveedoresoperacionales
+                      .filter((item: any) =>
+                        item.nombre
+                          .toLowerCase()
+                          .includes(searchQuery.toLowerCase())
+                      )
+                      .map((item: any, key: any) => (
+                        <CardProveedoresEscaner
+                          item={item}
+                          key={key}
+                          onOpen={openModal}
+                        />
+                      ))}
+                  </SimpleGrid>
+                ) : (
+                  <Text>No hay proveedores, debes agregarlos.</Text>
+                )}
               </Box>
             </Flex>
           )}

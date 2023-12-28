@@ -36,9 +36,12 @@ export default function InputFactura({ objValue, onChange, index }: any) {
   const dispatch: AppDispatch = useDispatch();
   var interno_precio = "2";
   const sorted = [...internos].sort((a, b) => {
-    if (a.nombre.startsWith('Envase') && !b.nombre.startsWith('Envase')) {
+    if (a.nombre.startsWith("Envase") && !b.nombre.startsWith("Envase")) {
       return -1;
-    } else if (!a.nombre.startsWith('Envase') && b.nombre.startsWith('Envase')) {
+    } else if (
+      !a.nombre.startsWith("Envase") &&
+      b.nombre.startsWith("Envase")
+    ) {
       return 1;
     } else {
       return 0;
@@ -53,7 +56,6 @@ export default function InputFactura({ objValue, onChange, index }: any) {
         </AbsoluteCenter>
       </Box>
       <FormControl id={"descripcion" + { index }} isRequired>
-        <FormLabel>Descripcion elemento {index + 1}: </FormLabel>
         <Select
           placeholder="Seleccione un Producto"
           onChange={(event) => {
@@ -80,8 +82,7 @@ export default function InputFactura({ objValue, onChange, index }: any) {
         >
           {sorted?.map((item: any, index: number) => (
             <option value={item.nombre}>{item.nombre}</option>
-          ))
-          }
+          ))}
         </Select>
       </FormControl>
       <FormControl id={"cantidad" + { index }} isRequired>
