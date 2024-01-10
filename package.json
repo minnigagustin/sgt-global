@@ -21,6 +21,7 @@
     "apexcharts": "^3.40.0",
     "axios": "^1.4.0",
     "chakra-dayzed-datepicker": "^0.2.9",
+    "chakra-react-select": "^4.7.6",
     "date-fns": "^2.30.0",
     "dayzed": "^3.2.3",
     "eslint": "8.41.0",

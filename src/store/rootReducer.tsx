@@ -9,6 +9,7 @@ import facturacionSlice from "./facturacionSlice";
 import internosSlice from "./internosSlice";
 import reportesSlice from "./reportesSlice";
 import proyeccionSlice from "./proyeccionSlice";
+import externosSlice from "./externosSlice";
 
 export default combineReducers({
   inicio: inicioSlice,
@@ -20,6 +21,6 @@ export default combineReducers({
   facturacion: facturacionSlice,
   internos: internosSlice,
   reportes: reportesSlice,
-  proyeccion: proyeccionSlice
-
+  proyeccion: proyeccionSlice,
+  externos: externosSlice,
 });

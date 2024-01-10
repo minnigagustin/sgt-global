@@ -91,6 +91,8 @@ import CardProveedoresEscaner from "@component/components/CardProveedoresEscaner
 import ModalScanAdd from "@component/components/ModalScanAdd";
 import ModalFacturaAdd from "@component/components/ModalFacturaAdd";
 import ModalManualAdd from "@component/components/ModalManualAdd";
+import { useRouter } from "next/router";
+import { externosGet } from "@component/store/externosSlice";
 const CardChart = dynamic(
   () => {
     return import("@component/components/CardChart");
@@ -104,6 +106,7 @@ export default function Home() {
   const dispatch: AppDispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [sucursal, setSelectedSucursal] = useState("");
+  const router = useRouter();
   const [mes, setSelectedMes] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [person, setPerson] = useState();
@@ -136,6 +139,8 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(sucursalesGet());
+    dispatch(externosGet());
+
     //@ts-ignore
     dispatch(GetProveedoresTotales({ mes: mes, sucursal: sucursal }));
 
@@ -253,22 +258,40 @@ export default function Home() {
                 <Text fontSize={"2xl"} mb={-3} mt={2}>
                   Insumos
                 </Text>
-                <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} spacing="24px">
-                  {proveedoresinsumos
-                    ?.filter((item: any) =>
-                      item.nombre
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase())
-                    )
-                    ?.map((item: any, key: any) => (
-                      <CardProveedoresEscaner
-                        item={item}
-                        key={key}
-                        onOpen={openModal}
-                        onAdd={openModalAdd}
-                      />
-                    ))}
-                </SimpleGrid>
+                {proveedoresinsumos?.length > 0 ? (
+                  <SimpleGrid columns={{ sm: 1, md: 2, xl: 2 }} spacing="24px">
+                    {proveedoresinsumos
+                      ?.filter((item: any) =>
+                        item.nombre
+                          .toLowerCase()
+                          .includes(searchQuery.toLowerCase())
+                      )
+                      ?.map((item: any, key: any) => (
+                        <CardProveedoresEscaner
+                          item={item}
+                          key={key}
+                          onOpen={openModal}
+                          onAdd={openModalAdd}
+                        />
+                      ))}
+                  </SimpleGrid>
+                ) : (
+                  <>
+                    <Text fontSize={"xl"} mt={14} fontWeight={"bold"}>
+                      No hay proveedores, debes agregarlos.
+                    </Text>
+                    <Text fontSize="8xl" textAlign="center" my="4">
+                      😢
+                    </Text>
+                    <Button
+                      colorScheme="green"
+                      w={"100%"}
+                      onClick={() => router.push("/proveedores")}
+                    >
+                      Ir a Proveedores {">"}
+                    </Button>
+                  </>
+                )}
               </Box>
               <Box bg="gray.200" width="2px" alignSelf="stretch" />{" "}
               {/* Línea vertical */}
@@ -293,7 +316,21 @@ export default function Home() {
                       ))}
                   </SimpleGrid>
                 ) : (
-                  <Text>No hay proveedores, debes agregarlos.</Text>
+                  <>
+                    <Text fontSize={"xl"} mt={14} fontWeight={"bold"}>
+                      No hay proveedores, debes agregarlos.
+                    </Text>
+                    <Text fontSize="8xl" textAlign="center" my="4">
+                      😢
+                    </Text>
+                    <Button
+                      colorScheme="green"
+                      w={"100%"}
+                      onClick={() => router.push("/proveedores")}
+                    >
+                      Ir a Proveedores {">"}
+                    </Button>
+                  </>
                 )}
               </Box>
             </Flex>
