@@ -213,27 +213,51 @@ const ModalManualAdd = ({ product, onClose }: any) => {
       </Heading>
 
       <form ref={formRef}>
-        <FormControl id="sucursal" isRequired>
-          <FormLabel>SUCURSAL: </FormLabel>
-          <Select
-            placeholder="Seleccione una sucursal"
-            onChange={(event) => setSucursal(event.target.value)}
-          >
-            {sucursales?.map((item: any, index: number) => (
-              <option value={item.nombre}>{item.nombre}</option>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl id="fecha" isRequired>
-          <FormLabel>FECHA: </FormLabel>
-          <Input
-            placeholder="Seleccione la fecha"
-            size="md"
-            _placeholder={{ color: "gray.500" }}
-            type="date"
-            onChange={(event) => setFecha(event.target.value)}
-          />
-        </FormControl>
+        <Stack spacing={2}>
+          <FormControl id="sucursal" isRequired>
+            <FormLabel>SUCURSAL: </FormLabel>
+            <Select
+              placeholder="Seleccione una sucursal"
+              onChange={(event) => setSucursal(event.target.value)}
+            >
+              {sucursales?.map((item: any, index: number) => (
+                <option value={item.nombre}>{item.nombre}</option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl id="fecha" isRequired>
+            <FormLabel>FECHA: </FormLabel>
+            <Input
+              placeholder="Seleccione la fecha"
+              size="md"
+              _placeholder={{ color: "gray.500" }}
+              type="date"
+              onChange={(event) => setFecha(event.target.value)}
+            />
+          </FormControl>
+          <Stack direction={{ base: "column", md: "row" }}>
+            <FormControl id="numfactura" isRequired>
+              <FormLabel>Num Factura: </FormLabel>
+              <Input
+                placeholder="Numero de factura"
+                size="md"
+                _placeholder={{ color: "gray.500" }}
+                type="number"
+                onChange={(event) => setFecha(event.target.value)}
+              />
+            </FormControl>
+            <FormControl id="ruc" isRequired>
+              <FormLabel>R.U.C: </FormLabel>
+              <Input
+                placeholder="RUC"
+                size="md"
+                _placeholder={{ color: "gray.500" }}
+                type="text"
+                onChange={(event) => setFecha(event.target.value)}
+              />
+            </FormControl>
+          </Stack>
+        </Stack>
         {formValues.map((obj, index) => (
           <FormControl id={obj.label} isRequired>
             <InputManual

@@ -50,7 +50,7 @@ export default function InputManual({ objValue, onChange, index }: any) {
       </Box>
       <FormControl id={"descripcion" + { index }} isRequired>
         <Select2
-          placeholder="Empleado..."
+          placeholder="Agregar producto..."
           tagVariant="filled"
           onChange={(event) => {
             const lista = externos.filter((item: any) =>
