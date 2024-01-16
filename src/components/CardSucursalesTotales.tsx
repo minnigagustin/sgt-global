@@ -75,7 +75,7 @@ export default function CardSucursalesTotales({ item, key, onHandle }: any) {
               color={"green"}
               mt={2}
             >
-              ${totalVentas}
+              ${totalVentas.toFixed(2)}
             </Heading>
             <Text fontSize={"sm"} color={"gray.500"}>
               Ventas ({ventasPorcentaje}%)
@@ -87,7 +87,7 @@ export default function CardSucursalesTotales({ item, key, onHandle }: any) {
               color={"orange"}
               mt={2}
             >
-              ${totalItbms}
+              ${totalItbms.toFixed(2)}
             </Heading>
             <Text fontSize={"sm"} color={"gray.500"}>
               ITBMS
@@ -99,7 +99,7 @@ export default function CardSucursalesTotales({ item, key, onHandle }: any) {
               color={"#ef4b80"}
               mt={2}
             >
-              ${totalOperacional}
+              ${totalOperacional.toFixed(2)}
             </Heading>
             <Text fontSize={"sm"} color={"gray.500"}>
               Gastos Operativos ({operacionalPorcentaje}%)
@@ -111,7 +111,7 @@ export default function CardSucursalesTotales({ item, key, onHandle }: any) {
               color={"#ef4b80"}
               mt={2}
             >
-              ${totalInsumos}
+              ${totalInsumos.toFixed(2)}
             </Heading>
             <Text fontSize={"sm"} color={"gray.500"}>
               Costo de Ventas ({insumosPorcentaje}%)
@@ -123,7 +123,7 @@ export default function CardSucursalesTotales({ item, key, onHandle }: any) {
               color={"#ef4b80"}
               mt={2}
             >
-              ${totalNomina}
+              ${totalNomina.toFixed(2)}
             </Heading>
             <Text fontSize={"sm"} color={"gray.500"}>
               Gastos de Nomina ({nominaPorcentaje}%)

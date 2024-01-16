@@ -67,7 +67,7 @@ export default function CardProveedoresTotales({ item, key, onHandle }: any) {
               color={"#ef4b80"}
               mt={2}
             >
-              ${item.total}
+              ${item.total.toFixed(2)}
             </Heading>
           </Stack>
           <Divider />
