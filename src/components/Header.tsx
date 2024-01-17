@@ -82,6 +82,7 @@ const LinkItems: Array<LinkItemProps> = [
     name: "Certificados",
     path: "/certificados",
     icon: FiAward,
+    disabled: process.env.DESHABILITAR_FUNCIONES === "true", // deshabilita basado en la variable de entorno
   },
   {
     name: "Proveedores",
@@ -97,6 +98,7 @@ const LinkItems: Array<LinkItemProps> = [
     name: "Facturacion Interna",
     path: "/facturacioninterna",
     icon: FiShoppingBag,
+    disabled: process.env.DESHABILITAR_FUNCIONES === "true", // deshabilita basado en la variable de entorno
   },
   {
     name: "Reportes",
@@ -209,7 +211,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Flex>
 
         {/* Elementos de navegación */}
-        {LinkItems.map((link) => (
+        {LinkItems.filter((link) => !link.disabled).map((link) => (
           <NavItem
             key={link.name}
             icon={link.icon}

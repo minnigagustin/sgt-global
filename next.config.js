@@ -6,6 +6,7 @@ const nextConfig = {
     URL_BACKEND: "https://admin.yappastore.com/nacion/",
     NAME_COMMERCE: "COMERCIO 2",
     LOGO_COMMERCE: "",
+    DESHABILITAR_FUNCIONES: "true",
   },
 };
 

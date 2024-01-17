@@ -70,11 +70,7 @@ const ModalPrevisualizar = ({
       console.log("iterando: " + value);
     }
 
-    AxiosUrl
-      .post(
-        "facturas_editar_api.php",
-        formData
-      )
+    AxiosUrl.post("facturas_editar_api.php", formData)
       .then((data) => {
         const facturaId = data.data.factura_id; // Obtiene el ID de factura de la respuesta
 
@@ -107,7 +103,11 @@ const ModalPrevisualizar = ({
       <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
         Previsualización de factura
       </Heading>
-
+      <p>
+        Sucursal: {sucursal} | Fecha: {fecha}
+      </p>{" "}
+      {/* Muestra la sucursal como texto */}
+      <hr />
       {
         //@ts-ignore
         data.map((item, index) => (
@@ -120,12 +120,10 @@ const ModalPrevisualizar = ({
           </div>
         ))
       }
-
       <p>
         Total Factura:{" "}
         {isNaN(totalFactura) ? "Error en cálculo" : `$${totalFactura}`}
       </p>
-
       <Stack spacing={6} direction={["column", "row"]}>
         <Button
           onClick={onClose}

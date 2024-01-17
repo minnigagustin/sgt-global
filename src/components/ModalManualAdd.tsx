@@ -43,6 +43,9 @@ const ModalManualAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
   const [nombre, SetNombre] = useState("");
   const [fecha, setFecha] = useState("");
+  const [factura, setFactura] = useState("");
+  const [ruc, setRuc] = useState("");
+
   const [sucursal, setSucursal] = useState("");
   const formRef = useRef(null);
   const [previewData, setPreviewData] = useState([]);
@@ -243,7 +246,7 @@ const ModalManualAdd = ({ product, onClose }: any) => {
                 size="md"
                 _placeholder={{ color: "gray.500" }}
                 type="number"
-                onChange={(event) => setFecha(event.target.value)}
+                onChange={(event) => setFactura(event.target.value)}
               />
             </FormControl>
             <FormControl id="ruc" isRequired>
@@ -253,7 +256,7 @@ const ModalManualAdd = ({ product, onClose }: any) => {
                 size="md"
                 _placeholder={{ color: "gray.500" }}
                 type="text"
-                onChange={(event) => setFecha(event.target.value)}
+                onChange={(event) => setRuc(event.target.value)}
               />
             </FormControl>
           </Stack>
