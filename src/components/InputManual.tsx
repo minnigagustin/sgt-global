@@ -54,6 +54,7 @@ export default function InputManual({ objValue, onChange, index }: any) {
           tagVariant="filled"
           onChange={(event) => {
             const lista = externos.filter((item: any) =>
+              //@ts-ignore
               item.nombre.toLowerCase().includes(event.value.toLowerCase())
             );
             console.log("la lista " + JSON.stringify(lista));
