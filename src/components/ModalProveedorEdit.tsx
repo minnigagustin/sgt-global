@@ -81,11 +81,7 @@ const ModalProveedorEdit = ({ person, onClose }: any) => {
     formData.append("RUC", RUC); // Agrega el grupo al FormData
     formData.append("DV", DV); // Agrega el grupo al FormData
     formData.append("API", API); // Agrega el grupo al FormData
-    AxiosUrl
-      .post(
-        "proveedores_editar_api.php",
-        formData
-      )
+    AxiosUrl.post("proveedores_editar_api.php", formData)
       .then((data) => {
         console.log(data);
         dispatch(proveedoresGet());
@@ -115,7 +111,7 @@ const ModalProveedorEdit = ({ person, onClose }: any) => {
           <Center>
             <Avatar
               size="xl"
-              src={`https://tamitut.com/PAYA/facturas/${person?.logo}`}
+              src={`${process.env.URL_BACKEND}/${person?.logo}`}
             />
           </Center>
           <Center w="full">

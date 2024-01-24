@@ -79,7 +79,7 @@ const CardTableFacturacionInterna = ({
                       as={FiEye}
                       onClick={() =>
                         window.open(
-                          "https://tamitut.com/PAYA/facturas/cotizacionPDF.php?id=" +
+                          `${process.env.URL_BACKEND}/cotizacionPDF.php?id=` +
                             item.id,
                           "_blank"
                         )

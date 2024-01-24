@@ -41,7 +41,7 @@ export default function CardProveedoresTotales({ item, key, onHandle }: any) {
               src={
                 item.logo === "images/blanco.png"
                   ? "/nacion-new-logo.png"
-                  : `https://tamitut.com/PAYA/facturas/${item.logo}`
+                  : `${process.env.URL_BACKEND}/${item.logo}`
               }
               borderRadius="2xl"
               css={{

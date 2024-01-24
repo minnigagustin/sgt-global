@@ -167,16 +167,12 @@ const ModalFacturaAdd = ({ product, onClose }: any) => {
       console.log("iterando: " + value);
     }
 
-    AxiosUrl
-      .post(
-        "facturas_editar_api.php",
-        formData
-      )
+    AxiosUrl.post("facturas_editar_api.php", formData)
       .then((data) => {
         const facturaId = data.data.factura_id; // Obtiene el ID de factura de la respuesta
 
         // Construye la URL con el ID de factura
-        const url = `https://tamitut.com/PAYA/facturas/cotizacionPDF.php?id=${facturaId}`;
+        const url = `${process.env.URL_BACKEND}/cotizacionPDF.php?id=${facturaId}`;
 
         // Abre una nueva ventana en blanco con la URL
         window.open(url, "_blank");

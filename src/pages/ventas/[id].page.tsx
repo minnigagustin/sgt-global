@@ -220,7 +220,7 @@ export default function Home({ id }: any) {
                   <Image
                     alt="imagen"
                     //@ts-ignore
-                    src={`https://tamitut.com/PAYA/facturas/${selectedItem?.foto}`}
+                    src={`${process.env.URL_BACKEND}/${selectedItem?.foto}`}
                   />
                 </ModalContent>
               </Modal>

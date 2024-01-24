@@ -79,7 +79,7 @@ const CardTableProveedores = ({
                   <Td>{item.categoria}</Td>
                   <Td>
                     <Avatar
-                      src={`https://tamitut.com/PAYA/facturas/${item.logo}`}
+                      src={`${process.env.URL_BACKEND}/${item.logo}`}
                       css={{
                         border: "2px solid white",
                       }}
