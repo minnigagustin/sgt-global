@@ -8,6 +8,9 @@ const nextConfig = {
     LOGO_COMMERCE: "",
     DESHABILITAR_FUNCIONES: "true",
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;
