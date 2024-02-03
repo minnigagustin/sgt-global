@@ -312,6 +312,7 @@ export default function Home() {
                           item={item}
                           key={key}
                           onOpen={openModal}
+                          onAdd={openModalAdd}
                         />
                       ))}
                   </SimpleGrid>
