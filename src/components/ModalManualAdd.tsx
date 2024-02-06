@@ -40,7 +40,6 @@ import { AxiosUrl } from "@component/configs/AxiosConfig";
 import InputManual from "./InputManual";
 
 const ModalManualAdd = ({ product, onClose }: any) => {
-  const fileInputRef = useRef(null);
   const [nombre, SetNombre] = useState("");
   const [fecha, setFecha] = useState("");
   const [factura, setFactura] = useState("");
@@ -69,8 +68,6 @@ const ModalManualAdd = ({ product, onClose }: any) => {
     },
   ]);
   const [toggle, setToggle] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const selectRef = useRef<HTMLSelectElement>(null);
   const indexRef = useRef(1);
 
   const handleChange = (
@@ -156,37 +153,18 @@ const ModalManualAdd = ({ product, onClose }: any) => {
 
   const handleSubmit = () => {
     const formData = new FormData();
-    formData.append("fecha", fecha);
     formData.append("sucursal", sucursal);
-    formData.append("data", JSON.stringify(formValues));
-    console.log("La fecha: " + fecha);
-    console.log("La sucursal: " + sucursal);
+    formData.append("fecha", fecha);
+    formData.append("numfactura", factura); // Asegúrate de que este campo se llame igual en el backend
+    formData.append("ruc", ruc);
 
-    console.log("Los datos que se enviaran: " + JSON.stringify(formData));
-
-    // Display the values
-    //@ts-ignore
-    for (var value of formData.values()) {
-      console.log("iterando: " + value);
-    }
-
-    AxiosUrl.post("facturas_editar_api.php", formData)
-      .then((data) => {
-        const facturaId = data.data.factura_id; // Obtiene el ID de factura de la respuesta
-
-        // Construye la URL con el ID de factura
-        const url = `${process.env.URL_BACKEND}/cotizacionPDF.php?id=${facturaId}`;
-
-        // Abre una nueva ventana en blanco con la URL
-        window.open(url, "_blank");
-
-        dispatch(facturasGet());
-        console.log(data);
-        onClose();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // Añadir los detalles de los elementos del formulario
+    formValues.forEach((item, index) => {
+      formData.append(`items[${index}][descripcion]`, item.label);
+      formData.append(`items[${index}][precio]`, item.precio);
+      formData.append(`items[${index}][cantidad]`, item.cantidad);
+      formData.append(`items[${index}][total]`, item.total);
+    });
   };
 
   return (
