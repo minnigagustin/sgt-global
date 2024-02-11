@@ -233,7 +233,7 @@ export default function Home() {
           <Modal onClose={onCloseAdd} isOpen={isOpenAdd} isCentered>
             <ModalOverlay />
             <ModalContent w={"90%"}>
-              <ModalManualAdd onClose={onCloseAdd} />
+              <ModalManualAdd product={person} onClose={onCloseAdd} />
             </ModalContent>
           </Modal>
           <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} spacing="24px">

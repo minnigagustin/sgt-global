@@ -151,12 +151,18 @@ const ModalManualAdd = ({ product, onClose }: any) => {
     onOpenPre();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const totalSum = formValues.reduce((acc, current) => {
+      return acc + parseFloat(current.total || "0");
+    }, 0);
+
     const formData = new FormData();
     formData.append("sucursal", sucursal);
     formData.append("fecha", fecha);
-    formData.append("numfactura", factura); // Asegúrate de que este campo se llame igual en el backend
-    formData.append("ruc", ruc);
+    formData.append("addNumero", factura);
+    formData.append("addRuc", ruc);
+    // Aquí usamos el total calculado
+    formData.append("addTotal", totalSum.toString());
 
     // Añadir los detalles de los elementos del formulario
     formValues.forEach((item, index) => {
@@ -165,6 +171,19 @@ const ModalManualAdd = ({ product, onClose }: any) => {
       formData.append(`items[${index}][cantidad]`, item.cantidad);
       formData.append(`items[${index}][total]`, item.total);
     });
+
+    try {
+      const response = await AxiosUrl.post(
+        `db_desglose_api.php?id=${product?.id}`,
+        formData
+      );
+      console.log(response.data);
+      // Manejo de la respuesta del servidor
+      // Por ejemplo, puedes cerrar el modal y recargar datos si es necesario
+      onClose(); // Cerrar el modal
+    } catch (error) {
+      console.error("Error al enviar los datos: ", error);
+    }
   };
 
   return (
