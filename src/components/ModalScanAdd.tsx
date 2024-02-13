@@ -126,13 +126,16 @@ const ModalScanAdd = ({ person, onClose }: any) => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         data={mindeeData}
+        proveedor={person}
+        sucursal={tipo}
+        cerrarModal={onClose}
       />
 
       <FormControl id="email">
         <FormLabel>Sucursal</FormLabel>
         <Select onChange={(event) => setTipo(event.target.value)}>
           {sucursales?.map((item: any, key: any) => (
-            <option value={item.id} key={key}>
+            <option value={item.nombre} key={key}>
               {item.nombre}
             </option>
           ))}

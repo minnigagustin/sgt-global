@@ -15,9 +15,17 @@ import {
   Flex,
   ModalFooter,
 } from "@chakra-ui/react";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 import { useEffect, useState } from "react";
 
-const ModalScanResult = ({ isOpen, onClose, data }: any) => {
+const ModalScanResult = ({
+  isOpen,
+  onClose,
+  data,
+  proveedor,
+  sucursal,
+  cerrarModal,
+}: any) => {
   const [invoiceDetails, setInvoiceDetails] = useState({
     fecha: "",
     dueDate: "",
@@ -25,6 +33,7 @@ const ModalScanResult = ({ isOpen, onClose, data }: any) => {
     totalAmount: 0,
     lineItems: [],
   });
+  const [loading, setLoading] = useState(false);
 
   // Efecto para parsear y establecer los datos de la factura
   useEffect(() => {
@@ -101,11 +110,35 @@ const ModalScanResult = ({ isOpen, onClose, data }: any) => {
   };
 
   // Función que se ejecutará cuando se haga clic en el botón "GUARDAR FACTURA"
-  const saveInvoice = () => {
-    // Aquí puedes implementar la lógica para procesar y guardar los detalles de la factura
-    // Por ejemplo, podrías llamar a una API o actualizar algún estado global
-    console.log(invoiceDetails);
+
+  const saveInvoice = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("sucursal", sucursal);
+    formData.append("fecha", invoiceDetails.fecha);
+    formData.append("addNumero", invoiceDetails.invoiceNumber);
+    formData.append("addRuc", proveedor.ruc);
+    // Aquí usamos el total calculado
+    formData.append("addTotal", invoiceDetails.totalAmount.toString());
+
+    // Añadir los detalles de los elementos del formulario
+
+    try {
+      const response = await AxiosUrl.post(
+        `db_desglose_api.php?id=${proveedor?.id}`,
+        formData
+      );
+      console.log(response.data);
+      // Manejo de la respuesta del servidor
+      // Por ejemplo, puedes cerrar el modal y recargar datos si es necesario
+      cerrarModal();
+      setLoading(false);
+      onClose(); // Cerrar el modal
+    } catch (error) {
+      console.error("Error al enviar los datos: ", error);
+    }
   };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -150,6 +183,17 @@ const ModalScanResult = ({ isOpen, onClose, data }: any) => {
                   />
                 </Flex>
                 <FormControl>
+                  <FormLabel>Precio</FormLabel>
+                  <Input
+                    type="number"
+                    //@ts-ignore
+                    value={item.unitPrice}
+                    onChange={(e) =>
+                      updateLineItem(index, "unitPrice", e.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl>
                   <FormLabel>Cantidad</FormLabel>
                   <Input
                     type="number"
@@ -182,7 +226,12 @@ const ModalScanResult = ({ isOpen, onClose, data }: any) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" onClick={saveInvoice}>
+          <Button
+            colorScheme="blue"
+            onClick={saveInvoice}
+            isLoading={loading}
+            loadingText={"Subiendo..."}
+          >
             GUARDAR FACTURA {">"}
           </Button>
         </ModalFooter>
