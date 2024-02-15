@@ -169,7 +169,7 @@ export default function Home() {
 
   // Filtra los empleados que tienen el rol de "administrador"
   const proveedoresinsumos = proveedoresTotales.filter(
-    (item: any) => item.tipo === "insumo"
+    (item: any) => item.tipo === "insumos" || item.tipo === "insumos"
   );
 
   // Filtra los empleados que NO tienen el rol de "administrador"
