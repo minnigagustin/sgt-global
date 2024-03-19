@@ -53,6 +53,24 @@ export const GetProveedoresTotales = createAsyncThunk(
   }
 );
 
+export const empleadosRegistrados = createAsyncThunk(
+  "user/personas/lista",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response: any = await axios.get(
+        `https://appspuntaltenses.com/elfenix/empleadoslista.php`
+      );
+      //@ts-ignore
+      console.log(response.data, "esto llego");
+      //@ts-ignore
+      return response.data;
+    } catch (error: any) {
+      console.log(error.response.data, "falle aqui");
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const comerciosGet = createAsyncThunk(
   "user/comercios",
   async (_, { rejectWithValue }) => {
@@ -207,6 +225,7 @@ const inicioSlice = createSlice({
       };
       console.log(action.error.message);
     });
+
     builder.addCase(DeliveryGet.pending, (state) => {
       state.loading = true;
     });

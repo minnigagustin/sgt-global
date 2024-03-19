@@ -55,7 +55,7 @@ import ModalEmpleadoEdit from "@component/components/ModalEmpleadoEdit";
 import CardComercioEdit from "@component/components/CardComercioEdit";
 import ModalComercioEdit from "@component/components/ModalComercioEdit";
 import ModalComercioAdd from "@component/components/ModalComercioAdd";
-import { FiBarChart, FiPlus } from "react-icons/fi";
+import { FiBarChart, FiPlus, FiUsers } from "react-icons/fi";
 import ModalProveedorAdd from "@component/components/ModalProveedorAdd";
 import ModalProveedorEdit from "@component/components/ModalProveedorEdit";
 import DeleteProveedor from "@component/components/DeleteProveedor";
@@ -64,24 +64,29 @@ import { sucursalesGet } from "@component/store/sucursalesSlice";
 import CardTableSucursales from "@component/components/CardTableSucursales";
 import ModalSucursalAdd from "@component/components/ModalSucursalAdd";
 import DeleteSucursal from "@component/components/DeleteSucursal";
-import dynamic from "next/dynamic";
+import ModalSucursalEdit from "@component/components/ModalSucursalEdit";
+import CardTableUsuarios from "@component/components/CardTableUsuarios";
+import { usuariosGet } from "@component/store/usuariosSlice";
+import DeleteUsuario from "@component/components/DeleteUsuario";
+import ModalUsuarioEdit from "@component/components/ModalUsuarioEdit";
+import ModalUsuarioAdd from "@component/components/ModalUsuarioAdd";
+import ModalEmpleadoAdd from "@component/components/ModalEmpleadoAdd";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const ModalSucursalEdit = dynamic(
-  () => import("@component/components/ModalSucursalEdit"),
-  {
-    ssr: false,
-  }
-);
 export default function Home() {
   const dispatch: AppDispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTipo, setSelectedTipo] = useState<string>(""); // Estado para el tipo seleccionado
-  const { sucursales, loading } = useSelector((resp: any) => resp.sucursales);
+  const [selectedCargo, setSelectedCargo] = useState<string>(""); // Estado para el tipo seleccionado
+
+  const { usuarios, loading } = useSelector((resp: any) => resp.usuarios);
+  const { sucursales } = useSelector((resp: any) => resp.sucursales);
+
   const cancelRef = React.useRef();
 
   useEffect(() => {
+    dispatch(usuariosGet());
     dispatch(sucursalesGet());
   }, [dispatch]);
 
@@ -114,10 +119,10 @@ export default function Home() {
     <>
       <Header>
         <Head>
-          <title>Sucursales | {process.env.NAME_COMMERCE}</title>
+          <title>Empleados | {process.env.NAME_COMMERCE}</title>
           <meta
             name="description"
-            content="Sucursales | {process.env.NAME_COMMERCE}"
+            content="Empleados | {process.env.NAME_COMMERCE}"
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
@@ -125,11 +130,11 @@ export default function Home() {
         <Container minHeight="100vh" maxW="full" h={"full"} bg="#EEF1F9">
           <Box>
             <Heading>
-              <Icon as={FiBarChart} />
-              Sucursales
+              <Icon as={FiUsers} mr={4} />
+              Gestíon de Empleados
             </Heading>
             <Text fontSize="lg">
-              Realiza un seguimiento de las facturaciones de tus proveedores
+              Gestione todos los empleados en esta sección
             </Text>
           </Box>
           <Divider p={4} />
@@ -148,11 +153,28 @@ export default function Home() {
               />
               <Select
                 bg={"white"}
+                value={selectedCargo}
+                onChange={(e) => setSelectedCargo(e.target.value)}
+                mr={4}
+              >
+                <option value="">Cargo</option>
+                <option value="admin">Admin</option>
+                <option value="colaborador">colaborador</option>
+                <option value="franquicia">Franquicia</option>
+                {/*                 <option value="operacionales">operacionales</option>
+                 */}
+              </Select>
+              <Select
+                bg={"white"}
                 value={selectedTipo}
                 onChange={(e) => setSelectedTipo(e.target.value)}
               >
-                <option value="">Todos los paises</option>
-                <option value="PANAMA">Panama</option>
+                <option value="">Sucursal</option>
+                {sucursales?.map((item: any, key: any) => (
+                  <option value={item.nombre} key={key}>
+                    {item.nombre}
+                  </option>
+                ))}
                 {/*                 <option value="operacionales">operacionales</option>
                  */}
               </Select>
@@ -175,16 +197,16 @@ export default function Home() {
           <Modal onClose={onCloseAdd} isOpen={isOpenAdd} isCentered>
             <ModalOverlay />
             <ModalContent w={"90%"}>
-              <ModalSucursalAdd onClose={onCloseAdd} />
+              <ModalEmpleadoAdd onClose={onCloseAdd} />
             </ModalContent>
           </Modal>
           <Modal onClose={onCloseEdit} isOpen={isOpenEdit} isCentered>
             <ModalOverlay />
             <ModalContent w={"90%"}>
-              <ModalSucursalEdit person={person} onClose={onCloseEdit} />
+              <ModalUsuarioEdit person={person} onClose={onCloseEdit} />
             </ModalContent>
           </Modal>
-          <DeleteSucursal
+          <DeleteUsuario
             cancelRef={cancelRef}
             isOpen={isOpen}
             onOpen={onOpen}
@@ -194,17 +216,18 @@ export default function Home() {
           {loading ? (
             <Spinner size={"xl"} />
           ) : (
-            <CardTableSucursales
+            <CardTableUsuarios
               title="Proveedores"
               type="Productos"
               onEdit={openModal}
               onDelete={onOpenDelete}
-              list={sucursales?.filter(
+              list={usuarios?.filter(
                 (item: any) =>
-                  item.ALIAS.toLowerCase().includes(
-                    searchQuery.toLowerCase()
-                  ) &&
-                  (selectedTipo === "" || item.Pais === selectedTipo)
+                  item.usuario
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) &&
+                  (selectedTipo === "" || item.sucursal === selectedTipo) &&
+                  (selectedCargo === "" || item.cargo === selectedCargo)
               )}
             />
           )}

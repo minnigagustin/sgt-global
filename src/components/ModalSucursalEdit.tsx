@@ -1,97 +1,66 @@
+import React, { useMemo, useRef, useState } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import {
   Button,
-  Flex,
+  Stack,
   FormControl,
   FormLabel,
-  Heading,
   Input,
-  Stack,
   useColorModeValue,
-  HStack,
-  Avatar,
-  AvatarBadge,
-  IconButton,
-  Center,
-  Switch,
-  InputGroup,
-  InputRightElement,
-  Select,
+  Heading,
 } from "@chakra-ui/react";
-import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useRef } from "react";
-import { useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@component/store";
-import { proveedoresGet } from "@component/store/proveedoresSlice";
-import { sucursalesGet } from "@component/store/sucursalesSlice";
-import { AxiosUrl } from "@component/configs/AxiosConfig";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-const ModalSucursalEdit = ({ person, onClose }: any) => {
-  const fileInputRef = useRef(null);
-  const dispatch: AppDispatch = useDispatch();
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
+});
+// Componente para seleccionar una ubicación en el mapa
+function LocationMarker({ setPosition }) {
+  const map = useMapEvents({
+    click(e) {
+      setPosition(e.latlng);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
 
-  const [file, setFile] = useState(
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-  );
-  const [show, setShow] = useState(false);
+  return null; // No es necesario retornar el Marker aquí, se manejará desde el componente padre
+}
 
-  const [fileimage, setFileImage] = useState(null);
+const ModalSucursalEdit = ({ person, onClose }) => {
   const [nombre, setNombre] = useState(person?.nombre);
-  const [id, setId] = useState(person?.id);
-  const [password, setPassword] = useState(person?.password);
+  const [alias, setAlias] = useState(person?.alias);
+  const [apiKey, setApiKey] = useState(person?.apiKey);
+  const markerRef = useRef(null);
 
-  const [legajocontadora, setLegajoContadora] = useState(
-    person?.legajo_contadora
+  const [position, setPosition] = useState({
+    lat: person?.lat || 8.537981,
+    lng: person?.lng || -80.782127,
+  });
+
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current;
+        if (marker != null) {
+          setPosition(marker.getLatLng());
+        }
+      },
+    }),
+    []
   );
-  const [tipo, setTipo] = useState(person?.categoria);
-  const [DV, setDV] = useState(person?.dv);
-  const [token, setToken] = useState(person?.token);
-  const [alias, setAlias] = useState(person?.ALIAS);
 
-  const [nacimiento, setNacimiento] = useState(person?.fecha_nacimiento);
-  const [condicion_contrato, setCondicion] = useState(
-    person?.condicion_contrato
-  );
-
-  const handleButtonClick = () => {
-    //@ts-ignore
-    fileInputRef?.current?.click();
-  };
-
-  const handleFileInputChange = (event: any) => {
-    const file = event.target.files[0];
-    // Aquí puedes realizar acciones con el archivo seleccionado
-    console.log("Archivo seleccionado:", file);
-    const fileUrl = URL.createObjectURL(file);
-    // Asignar la URL al atributo src del Avatar
-    console.log(fileUrl);
-    setFile(fileUrl);
-    setFileImage(file);
-  };
-
+  // Función de envío aquí...
   const handleSubmit = () => {
-    const formData = new FormData();
-    //@ts-ignore
-    //@ts-ignore
-    formData.append("nombre", nombre); // Agrega el nombre al FormData
-    formData.append("id", id); // Agrega el nombre al FormData
-
-    formData.append("token", token); // Agrega el grupo al FormData
-    formData.append("ALIAS", alias); // Agrega el grupo al FormData
-    AxiosUrl
-      .post(
-        "sucursales_editar_api.php",
-        formData
-      )
-      .then((data) => {
-        console.log(data);
-        dispatch(sucursalesGet());
-        onClose();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // Aquí iría tu lógica para enviar la información actualizada, por ejemplo:
+    console.log("Guardar:", { nombre, alias, apiKey, lat, lng });
+    // onClose(); // Cerrar modal después de guardar
   };
 
   return (
@@ -105,40 +74,91 @@ const ModalSucursalEdit = ({ person, onClose }: any) => {
       p={6}
     >
       <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-        Editar: {person?.nombre}
+        Editar: {nombre}
       </Heading>
-      <FormControl id="userName" isRequired>
+      <FormControl id="nombre" isRequired>
         <FormLabel>Nombre</FormLabel>
         <Input
-          placeholder="UserName"
-          _placeholder={{ color: "gray.500" }}
-          type="text"
+          placeholder="Nombre"
           value={nombre}
-          onChange={(event) => setNombre(event.target.value)}
+          onChange={(e) => setNombre(e.target.value)}
         />
       </FormControl>
-      <FormControl id="userName" isRequired>
+      <FormControl id="alias" isRequired>
         <FormLabel>Alias</FormLabel>
         <Input
           placeholder="Alias"
-          _placeholder={{ color: "gray.500" }}
-          type="text"
           value={alias}
-          onChange={(event) => setAlias(event.target.value)}
+          onChange={(e) => setAlias(e.target.value)}
         />
       </FormControl>
-
-      <FormControl id="userName" isRequired>
-        <FormLabel>Api Key</FormLabel>
+      <FormControl id="apiKey" isRequired>
+        <FormLabel>API Key</FormLabel>
         <Input
-          placeholder="Endpoint escaner"
-          _placeholder={{ color: "gray.500" }}
-          type="text"
-          value={token}
-          onChange={(event) => setToken(event.target.value)}
+          placeholder="API Key"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+        />
+      </FormControl>
+      <FormControl id="latitud" isRequired>
+        <FormLabel>Latitud</FormLabel>
+        <Input
+          placeholder="Latitud"
+          type="number"
+          value={position.lat}
+          onChange={(e) =>
+            setPosition({ ...position, lat: parseFloat(e.target.value) })
+          }
+        />
+      </FormControl>
+      <FormControl id="longitud" isRequired>
+        <FormLabel>Longitud</FormLabel>
+        <Input
+          placeholder="Longitud"
+          type="number"
+          value={position.lng}
+          onChange={(e) =>
+            setPosition({ ...position, lng: parseFloat(e.target.value) })
+          }
         />
       </FormControl>
 
+      {/* Mapa para seleccionar ubicación */}
+      <FormControl id="location" isRequired>
+        <FormLabel>Ubicación</FormLabel>
+        <div style={{ height: "300px" }}>
+          <MapContainer
+            center={[position.lat, position.lng]}
+            zoom={10}
+            scrollWheelZoom={true}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker
+              position={[position.lat, position.lng]}
+              draggable={true}
+              ref={markerRef}
+              eventHandlers={eventHandlers}
+              icon={
+                new L.Icon({
+                  iconUrl: markerIcon.src,
+                  iconRetinaUrl: markerIcon2x.src,
+                  shadowUrl: markerShadow.src,
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41],
+                })
+              }
+            />
+          </MapContainer>
+        </div>
+      </FormControl>
+
+      {/* Botones de acción */}
       <Stack spacing={6} direction={["column", "row"]}>
         <Button
           onClick={onClose}
@@ -153,7 +173,6 @@ const ModalSucursalEdit = ({ person, onClose }: any) => {
         </Button>
         <Button
           bg={"blue.400"}
-          onClick={handleSubmit}
           color={"white"}
           w="full"
           _hover={{
