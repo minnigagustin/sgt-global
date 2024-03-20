@@ -16,7 +16,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
 import { comerciosGet } from "@component/store/inicioSlice";
@@ -26,6 +26,19 @@ import { productosGet } from "@component/store/productosSlice";
 import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { AxiosUrl } from "@component/configs/AxiosConfig";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon.src,
+  iconRetinaUrl: markerIcon2x.src,
+  shadowUrl: markerShadow.src,
+});
 
 const ModalSucursalAdd = ({ product, onClose }: any) => {
   const fileInputRef = useRef(null);
@@ -38,6 +51,24 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
   const [token, setToken] = useState("");
   const [alias, setAlias] = useState("");
   const [API, setAPI] = useState("");
+  const markerRef = useRef(null);
+
+  const [position, setPosition] = useState({
+    lat: 9.0091336,
+    lng: -79.5370962,
+  });
+
+  const eventHandlers = useMemo(
+    () => ({
+      dragend() {
+        const marker = markerRef.current;
+        if (marker != null) {
+          setPosition(marker.getLatLng());
+        }
+      },
+    }),
+    []
+  );
 
   const { zonas } = useSelector((resp: any) => resp.inicio);
 
@@ -75,11 +106,7 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
     formData.append("token", token); // Agrega el grupo al FormData
     formData.append("ALIAS", alias); // Agrega el grupo al FormData
 
-    AxiosUrl
-      .post(
-        "sucursales_editar_api.php",
-        formData
-      )
+    AxiosUrl.post("sucursales_editar_api.php", formData)
       .then((data) => {
         dispatch(sucursalesGet());
         console.log(data);
@@ -133,6 +160,65 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
           onChange={(event) => setToken(event.target.value)}
         />
       </FormControl>
+
+      {/* Mapa para seleccionar ubicación */}
+      <FormControl id="location" isRequired>
+        <FormLabel>Ubicación</FormLabel>
+        <div style={{ height: "300px" }}>
+          <MapContainer
+            center={[position.lat, position.lng]}
+            zoom={12}
+            scrollWheelZoom={true}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker
+              position={[position.lat, position.lng]}
+              draggable={true}
+              ref={markerRef}
+              eventHandlers={eventHandlers}
+              icon={
+                new L.Icon({
+                  iconUrl: markerIcon.src,
+                  iconRetinaUrl: markerIcon2x.src,
+                  shadowUrl: markerShadow.src,
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41],
+                })
+              }
+            />
+          </MapContainer>
+        </div>
+      </FormControl>
+      <Stack direction={{ base: "column", md: "row" }}>
+        <FormControl id="latitud" isRequired>
+          <FormLabel>Latitud</FormLabel>
+          <Input
+            placeholder="Latitud"
+            type="number"
+            value={position.lat}
+            onChange={(e) =>
+              setPosition({ ...position, lat: parseFloat(e.target.value) })
+            }
+          />
+        </FormControl>
+        <FormControl id="longitud" isRequired>
+          <FormLabel>Longitud</FormLabel>
+          <Input
+            placeholder="Longitud"
+            type="number"
+            value={position.lng}
+            onChange={(e) =>
+              setPosition({ ...position, lng: parseFloat(e.target.value) })
+            }
+          />
+        </FormControl>
+      </Stack>
 
       <Stack spacing={6} direction={["column", "row"]}>
         <Button

@@ -35,13 +35,13 @@ function LocationMarker({ setPosition }) {
 
 const ModalSucursalEdit = ({ person, onClose }) => {
   const [nombre, setNombre] = useState(person?.nombre);
-  const [alias, setAlias] = useState(person?.alias);
-  const [apiKey, setApiKey] = useState(person?.apiKey);
+  const [alias, setAlias] = useState(person?.ALIAS);
+  const [apiKey, setApiKey] = useState(person?.token);
   const markerRef = useRef(null);
 
   const [position, setPosition] = useState({
-    lat: person?.lat || 8.537981,
-    lng: person?.lng || -80.782127,
+    lat: person?.lat || 9.0091336,
+    lng: person?.lng || -79.5370962,
   });
 
   const eventHandlers = useMemo(
@@ -100,28 +100,6 @@ const ModalSucursalEdit = ({ person, onClose }) => {
           onChange={(e) => setApiKey(e.target.value)}
         />
       </FormControl>
-      <FormControl id="latitud" isRequired>
-        <FormLabel>Latitud</FormLabel>
-        <Input
-          placeholder="Latitud"
-          type="number"
-          value={position.lat}
-          onChange={(e) =>
-            setPosition({ ...position, lat: parseFloat(e.target.value) })
-          }
-        />
-      </FormControl>
-      <FormControl id="longitud" isRequired>
-        <FormLabel>Longitud</FormLabel>
-        <Input
-          placeholder="Longitud"
-          type="number"
-          value={position.lng}
-          onChange={(e) =>
-            setPosition({ ...position, lng: parseFloat(e.target.value) })
-          }
-        />
-      </FormControl>
 
       {/* Mapa para seleccionar ubicación */}
       <FormControl id="location" isRequired>
@@ -129,7 +107,7 @@ const ModalSucursalEdit = ({ person, onClose }) => {
         <div style={{ height: "300px" }}>
           <MapContainer
             center={[position.lat, position.lng]}
-            zoom={10}
+            zoom={12}
             scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
           >
@@ -157,6 +135,30 @@ const ModalSucursalEdit = ({ person, onClose }) => {
           </MapContainer>
         </div>
       </FormControl>
+      <Stack direction={{ base: "column", md: "row" }}>
+        <FormControl id="latitud" isRequired>
+          <FormLabel>Latitud</FormLabel>
+          <Input
+            placeholder="Latitud"
+            type="number"
+            value={position.lat}
+            onChange={(e) =>
+              setPosition({ ...position, lat: parseFloat(e.target.value) })
+            }
+          />
+        </FormControl>
+        <FormControl id="longitud" isRequired>
+          <FormLabel>Longitud</FormLabel>
+          <Input
+            placeholder="Longitud"
+            type="number"
+            value={position.lng}
+            onChange={(e) =>
+              setPosition({ ...position, lng: parseFloat(e.target.value) })
+            }
+          />
+        </FormControl>
+      </Stack>
 
       {/* Botones de acción */}
       <Stack spacing={6} direction={["column", "row"]}>

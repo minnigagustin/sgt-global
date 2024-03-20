@@ -62,7 +62,6 @@ import DeleteProveedor from "@component/components/DeleteProveedor";
 import CardTableInsumos from "@component/components/CardTableInsumos";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import CardTableSucursales from "@component/components/CardTableSucursales";
-import ModalSucursalAdd from "@component/components/ModalSucursalAdd";
 import DeleteSucursal from "@component/components/DeleteSucursal";
 import dynamic from "next/dynamic";
 
@@ -70,6 +69,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 const ModalSucursalEdit = dynamic(
   () => import("@component/components/ModalSucursalEdit"),
+  {
+    ssr: false,
+  }
+);
+
+const ModalSucursalAdd = dynamic(
+  () => import("@component/components/ModalSucursalAdd"),
   {
     ssr: false,
   }
