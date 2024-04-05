@@ -72,7 +72,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Ventas", path: "/ventas", icon: FiDollarSign },
 
   { name: "Ingresar Facturas", path: "/escanear", icon: FiEye },
-  {
+  /* {
     name: "Asistencias",
     path: "/asistencias",
     icon: FiClock,
@@ -88,7 +88,7 @@ const LinkItems: Array<LinkItemProps> = [
     name: "Usuarios",
     path: "/usuarios",
     icon: FiUsers,
-  },
+  }, */
   {
     name: "Certificados",
     path: "/certificados",

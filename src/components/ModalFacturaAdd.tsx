@@ -79,16 +79,16 @@ const ModalFacturaAdd = ({ product, onClose }: any) => {
     total: any
   ) => {
     const values = [...formValues];
-    values[index].value = e.target.value;
+    values[index].value = e.value;
     if (label === "precio") {
-      values[index].precio = e.target.value;
+      values[index].precio = e.value;
       values[index].cantidad = cantidad;
       // values[index].precio = precio;
       values[index].total = total;
     }
     if (label === "descripcion") {
-      values[index].label = e.target.value;
-      values[index].cantidad = e.target.value;
+      values[index].label = e.value;
+      values[index].cantidad = e.value;
       //  values[index].cantidad = cantidad;
       values[index].precio = precio;
       values[index].total = "0";
@@ -102,12 +102,12 @@ const ModalFacturaAdd = ({ product, onClose }: any) => {
       ).toString();
     }
     if (label === "total") {
-      values[index].total = e.target.value.toString();
+      values[index].total = e.toString();
       values[index].precio = precio;
       values[index].cantidad = cantidad;
     }
     indexRef.current = index;
-    console.log("este es el value: " + e.target.value);
+    console.log("este es el value: " + e.value);
     console.log("este es el index en handleChange: " + index);
     setFormValues(values);
     console.log(

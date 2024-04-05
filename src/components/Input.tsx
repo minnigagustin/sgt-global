@@ -25,6 +25,7 @@ import { internosGet } from "@component/store/internosSlice";
 import { AppDispatch } from "@component/store";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Select as Select2 } from "chakra-react-select";
 
 export default function InputFactura({ objValue, onChange, index }: any) {
   const { sucursales } = useSelector((resp: any) => resp.sucursales);
@@ -55,14 +56,15 @@ export default function InputFactura({ objValue, onChange, index }: any) {
           Elemento
         </AbsoluteCenter>
       </Box>
+
       <FormControl id={"descripcion" + { index }} isRequired>
-        <Select
-          placeholder="Seleccione un Producto"
+        <Select2
+          placeholder="Agregar producto..."
+          tagVariant="filled"
           onChange={(event) => {
             const lista = sorted.filter((item: any) =>
-              item.nombre
-                .toLowerCase()
-                .includes(event.target.value.toLowerCase())
+              //@ts-ignore
+              item.nombre.toLowerCase().includes(event.value.toLowerCase())
             );
             console.log("la lista " + JSON.stringify(lista));
             console.log("el precio " + lista[0].precio);
@@ -79,11 +81,19 @@ export default function InputFactura({ objValue, onChange, index }: any) {
             //@ts-ignore
             cantidadInputRef.current.focus(); // Enfocar el campo de cantidad
           }}
-        >
-          {sorted?.map((item: any, index: number) => (
-            <option value={item.nombre}>{item.nombre}</option>
-          ))}
-        </Select>
+          chakraStyles={{
+            container: (provided) => ({
+              ...provided,
+              width: "100%",
+            }),
+          }}
+          options={sorted.map((item: any) => {
+            return {
+              label: item.nombre,
+              value: item.nombre,
+            };
+          })}
+        />
       </FormControl>
       <FormControl id={"cantidad" + { index }} isRequired>
         <FormLabel>Cantidad elemento: </FormLabel>
