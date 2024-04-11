@@ -37,14 +37,14 @@ const DeleteFactura = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
 
   const handleDelete = async () => {
     try {
-      await AxiosUrl.delete(
-        `eliminar_factura_api.php?id=${item.id}`
-      );
+      await AxiosUrl.delete(`eliminar_factura_api.php?id=${item.id}`);
       // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
       dispatch(facturasGet());
       onClose();
     } catch (error) {
       console.error("Error al eliminar el producto:", error);
+      dispatch(facturasGet());
+      onClose();
       // Aquí puedes agregar lógica para manejar errores, como mostrar un mensaje de error al usuario.
     }
   };
