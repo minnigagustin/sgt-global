@@ -82,13 +82,14 @@ const LinkItems: Array<LinkItemProps> = [
     path: "/empleados",
     icon: FiUsers,
   },
-  { name: "Sucursales", path: "/sucursales", icon: FiHeart },
+  
 
   {
     name: "Usuarios",
     path: "/usuarios",
     icon: FiUsers,
   }, */
+  { name: "Sucursales", path: "/sucursales", icon: FiHeart },
   {
     name: "Certificados",
     path: "/certificados",
