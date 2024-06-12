@@ -158,7 +158,7 @@ export default function Home({ id }: any) {
                 borderRadius={8}
               >
                 <Heading fontWeight={"bold"} textAlign={"center"}>
-                  ${totalproveedor}
+                  ${Number(totalproveedor)?.toFixed(2)}
                 </Heading>
                 <Text fontSize="lg" textAlign={"center"}>
                   Facturación Total de Resultados de Búsqueda
@@ -238,6 +238,9 @@ export default function Home({ id }: any) {
                     alt="imagen"
                     //@ts-ignore
                     src={`${process.env.URL_BACKEND}/${selectedItem?.foto}`}
+                    fallbackSrc={`https://bot.nacionsushi.com/facturas/${selectedItem?.foto
+                      .split("/")
+                      .pop()}`}
                   />
                 </ModalContent>
               </Modal>
