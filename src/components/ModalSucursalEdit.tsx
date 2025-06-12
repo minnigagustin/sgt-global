@@ -8,20 +8,25 @@ import {
   Input,
   useColorModeValue,
   Heading,
+  useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { AxiosUrl } from "@component/configs/AxiosConfig";
 
+// Icono Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: markerIcon.src,
   iconRetinaUrl: markerIcon2x.src,
   shadowUrl: markerShadow.src,
 });
-// Componente para seleccionar una ubicación en el mapa
+
+// Componente para clickear en el mapa
 function LocationMarker({ setPosition }) {
   const map = useMapEvents({
     click(e) {
@@ -30,13 +35,16 @@ function LocationMarker({ setPosition }) {
     },
   });
 
-  return null; // No es necesario retornar el Marker aquí, se manejará desde el componente padre
+  return null;
 }
 
 const ModalSucursalEdit = ({ person, onClose }) => {
-  const [nombre, setNombre] = useState(person?.nombre);
-  const [alias, setAlias] = useState(person?.ALIAS);
-  const [apiKey, setApiKey] = useState(person?.token);
+  const [nombre, setNombre] = useState(person?.nombre || "");
+  const [alias, setAlias] = useState(person?.ALIAS || "");
+  const [apiKey, setApiKey] = useState(person?.token || "");
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+
   const markerRef = useRef(null);
 
   const [position, setPosition] = useState({
@@ -56,11 +64,45 @@ const ModalSucursalEdit = ({ person, onClose }) => {
     []
   );
 
-  // Función de envío aquí...
-  const handleSubmit = () => {
-    // Aquí iría tu lógica para enviar la información actualizada, por ejemplo:
-    console.log("Guardar:", { nombre, alias, apiKey, lat, lng });
-    // onClose(); // Cerrar modal después de guardar
+  const handleSubmit = async () => {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    formData.append("id", person?.id);
+    formData.append("nombre", nombre);
+    formData.append("ALIAS", alias);
+    formData.append("lat", position.lat);
+    formData.append("lng", position.lng);
+
+    try {
+      const response = await AxiosUrl.post(
+        "sucursales_editar_api.php",
+        formData
+      );
+
+      if (response.data.success) {
+        toast({
+          title: "Sucursal actualizada",
+          description: response.data.message,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        onClose();
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      toast({
+        title: "Error al guardar",
+        description: error.message || "Ocurrió un error inesperado",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -76,7 +118,8 @@ const ModalSucursalEdit = ({ person, onClose }) => {
       <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
         Editar: {nombre}
       </Heading>
-      <FormControl id="nombre" isRequired>
+
+      <FormControl isRequired>
         <FormLabel>Nombre</FormLabel>
         <Input
           placeholder="Nombre"
@@ -84,7 +127,8 @@ const ModalSucursalEdit = ({ person, onClose }) => {
           onChange={(e) => setNombre(e.target.value)}
         />
       </FormControl>
-      <FormControl id="alias" isRequired>
+
+      <FormControl isRequired>
         <FormLabel>Alias</FormLabel>
         <Input
           placeholder="Alias"
@@ -92,17 +136,8 @@ const ModalSucursalEdit = ({ person, onClose }) => {
           onChange={(e) => setAlias(e.target.value)}
         />
       </FormControl>
-      <FormControl id="apiKey" isRequired>
-        <FormLabel>API Key</FormLabel>
-        <Input
-          placeholder="API Key"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-        />
-      </FormControl>
 
-      {/* Mapa para seleccionar ubicación */}
-      <FormControl id="location" isRequired>
+      <FormControl isRequired>
         <FormLabel>Ubicación</FormLabel>
         <div style={{ height: "300px" }}>
           <MapContainer
@@ -132,14 +167,15 @@ const ModalSucursalEdit = ({ person, onClose }) => {
                 })
               }
             />
+            <LocationMarker setPosition={setPosition} />
           </MapContainer>
         </div>
       </FormControl>
+
       <Stack direction={{ base: "column", md: "row" }}>
-        <FormControl id="latitud" isRequired>
+        <FormControl isRequired>
           <FormLabel>Latitud</FormLabel>
           <Input
-            placeholder="Latitud"
             type="number"
             value={position.lat}
             onChange={(e) =>
@@ -147,10 +183,9 @@ const ModalSucursalEdit = ({ person, onClose }) => {
             }
           />
         </FormControl>
-        <FormControl id="longitud" isRequired>
+        <FormControl isRequired>
           <FormLabel>Longitud</FormLabel>
           <Input
-            placeholder="Longitud"
             type="number"
             value={position.lng}
             onChange={(e) =>
@@ -160,26 +195,25 @@ const ModalSucursalEdit = ({ person, onClose }) => {
         </FormControl>
       </Stack>
 
-      {/* Botones de acción */}
       <Stack spacing={6} direction={["column", "row"]}>
         <Button
           onClick={onClose}
           bg={"red.400"}
           color={"white"}
           w="full"
-          _hover={{
-            bg: "red.500",
-          }}
+          _hover={{ bg: "red.500" }}
+          isDisabled={isLoading}
         >
           Cancelar
         </Button>
         <Button
+          onClick={handleSubmit}
           bg={"blue.400"}
           color={"white"}
           w="full"
-          _hover={{
-            bg: "blue.500",
-          }}
+          _hover={{ bg: "blue.500" }}
+          isLoading={isLoading}
+          isDisabled={isLoading}
         >
           Guardar
         </Button>

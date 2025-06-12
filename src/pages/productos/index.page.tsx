@@ -3,19 +3,24 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@component/styles/Home.module.css";
 import {
+  Box,
   Button,
   Card,
   CardBody,
   Container,
+  Divider,
   Flex,
   Grid,
+  Heading,
   HStack,
+  Icon,
   Input,
   Modal,
   ModalContent,
   ModalOverlay,
   SimpleGrid,
   Skeleton,
+  Stack,
   Stat,
   StatHelpText,
   StatLabel,
@@ -25,6 +30,8 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import CardTableSimple from "@component/components/CardTableSimple";
@@ -39,6 +46,10 @@ import React from "react";
 import { useState } from "react";
 import ModalProductEdit from "@component/components/ModalProductEdit";
 import ModalProductAdd from "@component/components/ModalProductAdd";
+import { FiPlus, FiShoppingCart } from "react-icons/fi";
+import DeleteProductInterno from "@component/components/DeleteProductInterno";
+import ModalProductInternoAdd from "@component/components/ModalProductInternoAdd";
+import ModalProductInternoEdit from "@component/components/ModalProductInternoEdit";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -89,31 +100,64 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Container minHeight="100vh" maxW="full" h={"full"} bg="#EEF1F9">
-          <Button colorScheme="blue" onClick={onOpenAdd} mb={4}>
-            Agregar producto +
-          </Button>
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            variant="filled"
-            placeholder="Buscar productos"
-            bg={"white"}
+          <Box>
+            <Heading>
+              <Icon as={FiShoppingCart} mr={4} />
+              Gestión de Productos
+            </Heading>
+            <Text fontSize="lg">
+              Gestione todos los productos y el inventario.
+            </Text>
+          </Box>
+          <Divider p={4} />
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            justifyContent={"space-between"}
             mb={4}
-            size="lg"
-          />
+          >
+            <Flex direction={"row"}>
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                variant="filled"
+                placeholder="Buscar productos"
+                bg={"white"}
+                mr={4}
+                size="lg"
+              />
+            </Flex>
+            <Button
+              w={60}
+              bg={useColorModeValue("#f6ae3e", "gray.900")}
+              color={"white"}
+              onClick={onOpenAdd}
+              rounded={"md"}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+              }}
+            >
+              <Icon as={FiPlus} mr={2} />
+              Agregar producto
+            </Button>
+          </Stack>
+
           <Modal onClose={onCloseAdd} isOpen={isOpenAdd} isCentered>
             <ModalOverlay />
             <ModalContent w={"90%"}>
-              <ModalProductAdd onClose={onCloseAdd} />
+              <ModalProductInternoAdd onClose={onCloseAdd} />
             </ModalContent>
           </Modal>
           <Modal onClose={onCloseEdit} isOpen={isOpenEdit} isCentered>
             <ModalOverlay />
             <ModalContent w={"90%"}>
-              <ModalProductEdit product={product} onClose={onCloseEdit} />
+              <ModalProductInternoEdit
+                product={product}
+                onClose={onCloseEdit}
+              />
             </ModalContent>
           </Modal>
-          <DeleteProduct
+          <DeleteProductInterno
             cancelRef={cancelRef}
             isOpen={isOpen}
             onOpen={onOpen}
@@ -126,7 +170,7 @@ export default function Home() {
             onEdit={openModal}
             onDelete={onOpenDelete}
             list={lista.filter((item: any) =>
-              item.producto.toLowerCase().includes(searchQuery.toLowerCase())
+              item.nombre.toLowerCase().includes(searchQuery.toLowerCase())
             )}
           />
         </Container>

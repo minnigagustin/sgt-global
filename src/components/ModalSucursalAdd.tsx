@@ -14,10 +14,10 @@ import {
   Center,
   Switch,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useMemo, useRef } from "react";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { comerciosGet } from "@component/store/inicioSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,22 +41,22 @@ L.Icon.Default.mergeOptions({
 });
 
 const ModalSucursalAdd = ({ product, onClose }: any) => {
+  const toast = useToast();
   const fileInputRef = useRef(null);
   const [nombre, SetNombre] = useState("");
-  const [direccion, setDireccion] = useState("");
-  const [cuit, setCuit] = useState("");
-
-  const [celular, setCelular] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [token, setToken] = useState("");
   const [alias, setAlias] = useState("");
-  const [API, setAPI] = useState("");
-  const markerRef = useRef(null);
-
+  const [file, setFile] = useState(
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+  );
+  const [fileimage, setFileImage] = useState(null);
   const [position, setPosition] = useState({
     lat: 9.0091336,
     lng: -79.5370962,
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const markerRef = useRef(null);
+  const dispatch: AppDispatch = useDispatch();
 
   const eventHandlers = useMemo(
     () => ({
@@ -70,50 +70,43 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
     []
   );
 
-  const { zonas } = useSelector((resp: any) => resp.inicio);
-
-  const dispatch: AppDispatch = useDispatch();
-
-  const [file, setFile] = useState(
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-  );
-
-  const [fileimage, setFileImage] = useState(null);
-
-  const handleButtonClick = () => {
-    //@ts-ignore
-    fileInputRef?.current?.click();
-  };
-
   const handleFileInputChange = (event: any) => {
     const file = event.target.files[0];
-    // Aquí puedes realizar acciones con el archivo seleccionado
-    console.log("Archivo seleccionado:", file);
     const fileUrl = URL.createObjectURL(file);
-    // Asignar la URL al atributo src del Avatar
-    console.log(fileUrl);
     setFile(fileUrl);
     setFileImage(file);
   };
 
   const handleSubmit = () => {
+    setIsLoading(true);
     const formData = new FormData();
-    //@ts-ignore
-    //@ts-ignore
-    //@ts-ignore
-    formData.append("nombre", nombre); // Agrega el nombre al FormData
-
-    formData.append("token", token); // Agrega el grupo al FormData
-    formData.append("ALIAS", alias); // Agrega el grupo al FormData
+    formData.append("nombre", nombre);
+    formData.append("ALIAS", alias);
 
     AxiosUrl.post("sucursales_editar_api.php", formData)
       .then((data) => {
         dispatch(sucursalesGet());
-        console.log(data);
+        toast({
+          title: "Sucursal agregada.",
+          description: "Se agregó la sucursal correctamente.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
         onClose();
       })
       .catch((error) => {
         console.error(error);
+        toast({
+          title: "Error al agregar.",
+          description: "Ocurrió un error al intentar agregar la sucursal.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -131,44 +124,33 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
         Agregar Sucursal
       </Heading>
 
-      <FormControl id="userName" isRequired>
+      <FormControl isRequired>
         <FormLabel>Nombre</FormLabel>
         <Input
           placeholder="Nombre"
           _placeholder={{ color: "gray.500" }}
           type="text"
-          onChange={(event) => SetNombre(event.target.value)}
+          onChange={(e) => SetNombre(e.target.value)}
         />
       </FormControl>
-      <FormControl id="userName" isRequired>
+
+      <FormControl isRequired>
         <FormLabel>Alias</FormLabel>
         <Input
           placeholder="Alias"
           _placeholder={{ color: "gray.500" }}
           type="text"
-          onChange={(event) => setAlias(event.target.value)}
+          onChange={(e) => setAlias(e.target.value)}
         />
       </FormControl>
 
-      <FormControl id="userName" isRequired>
-        <FormLabel>Api Key</FormLabel>
-        <Input
-          placeholder="Endpoint escaner"
-          _placeholder={{ color: "gray.500" }}
-          type="text"
-          value={token}
-          onChange={(event) => setToken(event.target.value)}
-        />
-      </FormControl>
-
-      {/* Mapa para seleccionar ubicación */}
-      <FormControl id="location" isRequired>
+      <FormControl isRequired>
         <FormLabel>Ubicación</FormLabel>
         <div style={{ height: "300px" }}>
           <MapContainer
             center={[position.lat, position.lng]}
             zoom={12}
-            scrollWheelZoom={true}
+            scrollWheelZoom
             style={{ height: "100%", width: "100%" }}
           >
             <TileLayer
@@ -177,7 +159,7 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
             />
             <Marker
               position={[position.lat, position.lng]}
-              draggable={true}
+              draggable
               ref={markerRef}
               eventHandlers={eventHandlers}
               icon={
@@ -195,11 +177,11 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
           </MapContainer>
         </div>
       </FormControl>
+
       <Stack direction={{ base: "column", md: "row" }}>
-        <FormControl id="latitud" isRequired>
+        <FormControl isRequired>
           <FormLabel>Latitud</FormLabel>
           <Input
-            placeholder="Latitud"
             type="number"
             value={position.lat}
             onChange={(e) =>
@@ -207,10 +189,9 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
             }
           />
         </FormControl>
-        <FormControl id="longitud" isRequired>
+        <FormControl isRequired>
           <FormLabel>Longitud</FormLabel>
           <Input
-            placeholder="Longitud"
             type="number"
             value={position.lng}
             onChange={(e) =>
@@ -226,20 +207,19 @@ const ModalSucursalAdd = ({ product, onClose }: any) => {
           bg={"red.400"}
           color={"white"}
           w="full"
-          _hover={{
-            bg: "red.500",
-          }}
+          _hover={{ bg: "red.500" }}
+          isDisabled={isLoading}
         >
           Cancelar
         </Button>
         <Button
-          bg={"blue.400"}
           onClick={handleSubmit}
+          bg={"blue.400"}
           color={"white"}
           w="full"
-          _hover={{
-            bg: "blue.500",
-          }}
+          _hover={{ bg: "blue.500" }}
+          isLoading={isLoading}
+          isDisabled={isLoading}
         >
           Agregar
         </Button>

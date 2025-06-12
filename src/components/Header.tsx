@@ -102,6 +102,11 @@ const LinkItems: Array<LinkItemProps> = [
     icon: FiTruck,
   },
   {
+    name: "Productos",
+    path: "/productos",
+    icon: FiShoppingCart,
+  },
+  {
     name: "Insumos y Gastos",
     path: "/insumos",
     icon: FiArchive,

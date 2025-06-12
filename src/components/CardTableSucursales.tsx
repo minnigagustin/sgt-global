@@ -59,7 +59,6 @@ const CardTableSucursales = ({
                 <Th color={"muni.verde"}>Sucursal</Th>
                 <Th color={"muni.verde"}>Pais</Th>
 
-                <Th color={"muni.verde"}>Api Key</Th>
                 <Th color={"muni.verde"} isNumeric>
                   Accion
                 </Th>
@@ -72,7 +71,6 @@ const CardTableSucursales = ({
                   <Td fontWeight={"bold"}>{item.ALIAS}</Td>
                   <Td>{item.Pais}</Td>
 
-                  <Td>{item.token}</Td>
                   <Td isNumeric>
                     <Icon as={FiEdit} onClick={() => onEdit(item)} />
                     <Icon as={FiTrash} onClick={() => onDelete(item)} />

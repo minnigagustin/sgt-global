@@ -29,6 +29,7 @@ import {
   Th,
   Tbody,
   Td,
+  useToast,
   Tfoot,
 } from "@chakra-ui/react";
 import { FiBarChart } from "react-icons/fi";
@@ -46,6 +47,7 @@ const CardTableProductos = ({
   onEdit,
 }: any) => {
   const router = useRouter();
+  const toast = useToast();
 
   return (
     <Card minH="83px">
@@ -58,26 +60,24 @@ const CardTableProductos = ({
             <Thead>
               <Tr>
                 <Th color={"muni.verde"}>{type}</Th>
-                <Th color={"muni.verde"}>Tipo</Th>
                 <Th color={"muni.verde"} isNumeric>
                   Precio
                 </Th>
                 <Th color={"muni.verde"} isNumeric>
-                  Reparto
+                  Inventario
                 </Th>
               </Tr>
             </Thead>
             <Tbody>
               {list?.map((item: any, index: number) => (
                 <Tr key={index}>
-                  <Td>{item.producto}</Td>
-                  <Td>{item.tipo}</Td>
+                  <Td>{item.nombre}</Td>
 
                   <Td fontWeight={"bold"} isNumeric>
                     ${item.precio}
                   </Td>
                   <Td fontWeight={"bold"} isNumeric>
-                    {item.reparto ? `$${item.reparto}` : null}
+                    {item.inventario ? `${item.inventario}` : 0}
                   </Td>
                   <Td fontWeight={"bold"}>
                     <Stack direction="row" justify={"center"}>
@@ -97,7 +97,16 @@ const CardTableProductos = ({
                       </Button>
                       <Button
                         colorScheme="green"
-                        onClick={() => router.push(`/productos/${item.id}`)}
+                        onClick={() =>
+                          toast({
+                            title: "Sección en desarrollo",
+                            description:
+                              "Muy pronto estará disponible esta nueva sección.",
+                            status: "info",
+                            duration: 4000,
+                            isClosable: true,
+                          })
+                        }
                         variant="solid"
                       >
                         <Icon as={FiBarChart} />

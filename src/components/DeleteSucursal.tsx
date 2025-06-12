@@ -1,18 +1,5 @@
 import {
   Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Stack,
-  useColorModeValue,
-  HStack,
-  Avatar,
-  AvatarBadge,
-  IconButton,
-  Center,
-  Switch,
   AlertDialog,
   AlertDialogOverlay,
   AlertDialogContent,
@@ -20,32 +7,43 @@ import {
   AlertDialogCloseButton,
   AlertDialogBody,
   AlertDialogFooter,
+  useToast,
 } from "@chakra-ui/react";
-import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useRef } from "react";
-import { useState } from "react";
-import axios from "axios";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@component/store";
-import { productosGet } from "@component/store/productosSlice";
-import { proveedoresGet } from "@component/store/proveedoresSlice";
 import { sucursalesGet } from "@component/store/sucursalesSlice";
 import { AxiosUrl } from "@component/configs/AxiosConfig";
 
 const DeleteSucursal = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
   const dispatch: AppDispatch = useDispatch();
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
-      await AxiosUrl.delete(
-        `sucursales_editar_api.php?id=${item.id}`
-      );
-      // Aquí puedes agregar cualquier lógica adicional después de eliminar el producto, como actualizar el estado o mostrar un mensaje de éxito.
+      await AxiosUrl.delete(`sucursales_editar_api.php?id=${item.id}`);
       dispatch(sucursalesGet());
+      toast({
+        title: "Sucursal eliminada.",
+        description: `La sucursal "${item?.nombre}" fue eliminada correctamente.`,
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
       onClose();
     } catch (error) {
-      console.error("Error al eliminar el producto:", error);
-      // Aquí puedes agregar lógica para manejar errores, como mostrar un mensaje de error al usuario.
+      console.error("Error al eliminar la sucursal:", error);
+      toast({
+        title: "Error al eliminar.",
+        description: "Ocurrió un error al intentar eliminar la sucursal.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,13 +61,21 @@ const DeleteSucursal = ({ isOpen, onOpen, onClose, cancelRef, item }: any) => {
         <AlertDialogHeader>Eliminar {item?.nombre}</AlertDialogHeader>
         <AlertDialogCloseButton />
         <AlertDialogBody>
-          Estas seguro de eliminar esta sucursal? Se eliminara permanentemente.
+          ¿Estás seguro de eliminar esta sucursal? Esta acción no se puede
+          deshacer.
         </AlertDialogBody>
         <AlertDialogFooter>
-          <Button ref={cancelRef} onClick={onClose}>
+          <Button ref={cancelRef} onClick={onClose} isDisabled={isLoading}>
             Cancelar
           </Button>
-          <Button colorScheme="red" ml={3} onClick={handleDelete}>
+          <Button
+            colorScheme="red"
+            ml={3}
+            onClick={handleDelete}
+            isLoading={isLoading}
+            loadingText="Eliminando..."
+            isDisabled={isLoading}
+          >
             Eliminar
           </Button>
         </AlertDialogFooter>

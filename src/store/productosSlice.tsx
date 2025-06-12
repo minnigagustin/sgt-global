@@ -9,11 +9,11 @@ export const productosGet = createAsyncThunk(
   "user/productos/",
   async (_, { rejectWithValue }) => {
     try {
-      const response: any = await AxiosUrl.get(`productos_api.php`);
+      const response: any = await AxiosUrl.get(`productos_internos_api.php`);
       //@ts-ignore
       console.log(response.data, "esto llego");
       //@ts-ignore
-      return response.data.Productos;
+      return response.data;
     } catch (error: any) {
       console.log(error.response.data, "falle aqui");
       return rejectWithValue(error);
@@ -113,7 +113,7 @@ const productosSlice = createSlice({
     });
     builder.addCase(productosGet.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.productos = payload;
+      state.lista = payload;
       console.log(payload, "este ess");
     });
     builder.addCase(productosGet.rejected, (state, action: any) => {
