@@ -6,6 +6,7 @@ import {
   Input,
   Stack,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -14,33 +15,58 @@ import { AppDispatch } from "@component/store";
 import { productosGet } from "@component/store/productosSlice";
 import { AxiosUrl } from "@component/configs/AxiosConfig";
 
-const ModalProductInternoEdit = ({ person, onClose }: any) => {
+const ModalProductInternoEdit = ({ product, onClose }: any) => {
   const dispatch: AppDispatch = useDispatch();
 
-  const [nombre, setNombre] = useState(person?.nombre || "");
-  const [id, setId] = useState(person?.id);
-  const [precio, setPrecio] = useState(person?.precio || "");
-  const [inventario, setInventario] = useState(person?.inventario || 0);
+  const [nombre, setNombre] = useState(product?.nombre || "");
+  const [id, setId] = useState(product?.id);
+  const [precio, setPrecio] = useState(product?.precio || "");
+  const [inventario, setInventario] = useState(product?.inventario || 0);
+
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
     if (!id) return;
 
+    setIsLoading(true);
+
     const data = {
       id: id,
       nombre: nombre,
-      precio: precio.toString(), // precio es VARCHAR en PHP
+      precio: precio.toString(),
       inventario: parseInt(inventario.toString()),
     };
 
-    axios
-      .patch("productos_internos_api.php", new URLSearchParams(data))
+    AxiosUrl.post("productos_internos_api.php", {
+      id, // si hay ID, se actualiza
+      nombre,
+      precio: precio.toString(),
+      inventario: parseInt(inventario.toString()),
+    })
       .then((response) => {
-        console.log("Actualizado:", response.data);
         dispatch(productosGet());
+        toast({
+          title: "Producto actualizado.",
+          description: `“${nombre}” fue modificado correctamente.`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         onClose();
       })
       .catch((error) => {
+        toast({
+          title: "Error al actualizar.",
+          description: "No se pudo modificar el producto.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         console.error("Error al actualizar:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -55,7 +81,7 @@ const ModalProductInternoEdit = ({ person, onClose }: any) => {
       p={6}
     >
       <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-        Editar: {person?.nombre}
+        Editar: {product?.nombre}
       </Heading>
 
       <FormControl isRequired>
@@ -103,6 +129,8 @@ const ModalProductInternoEdit = ({ person, onClose }: any) => {
           color={"white"}
           w="full"
           _hover={{ bg: "blue.500" }}
+          isLoading={isLoading}
+          loadingText="Guardando"
         >
           Guardar
         </Button>

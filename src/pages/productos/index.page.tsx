@@ -1,6 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
+import * as XLSX from "xlsx"; // Asegúrate de importar esto
+import { FiDownload } from "react-icons/fi";
+
 import styles from "@component/styles/Home.module.css";
 import {
   Box,
@@ -87,6 +90,20 @@ export default function Home() {
     onOpenEdit();
   };
 
+  const handleDownloadExcel = () => {
+    const dataToExport = lista.map(({ nombre, precio, inventario }: any) => ({
+      Nombre: nombre,
+      Precio: precio,
+      Stock: inventario,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
+
+    XLSX.writeFile(workbook, "productos.xlsx");
+  };
+
   return (
     <>
       <Header>
@@ -114,8 +131,9 @@ export default function Home() {
             direction={{ base: "column", md: "row" }}
             justifyContent={"space-between"}
             mb={4}
+            spacing={4}
           >
-            <Flex direction={"row"}>
+            <Flex direction={"row"} flex={1}>
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -126,20 +144,38 @@ export default function Home() {
                 size="lg"
               />
             </Flex>
-            <Button
-              w={60}
-              bg={useColorModeValue("#f6ae3e", "gray.900")}
-              color={"white"}
-              onClick={onOpenAdd}
-              rounded={"md"}
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "lg",
-              }}
-            >
-              <Icon as={FiPlus} mr={2} />
-              Agregar producto
-            </Button>
+
+            <HStack spacing={4}>
+              <Button
+                w={60}
+                leftIcon={<FiDownload />}
+                bg="green.500"
+                color="white"
+                onClick={handleDownloadExcel}
+                rounded="md"
+                _hover={{
+                  bg: "green.600",
+                  transform: "translateY(-2px)",
+                  boxShadow: "lg",
+                }}
+              >
+                Descargar Excel
+              </Button>
+              <Button
+                w={60}
+                bg={useColorModeValue("#f6ae3e", "gray.900")}
+                color={"white"}
+                onClick={onOpenAdd}
+                rounded={"md"}
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "lg",
+                }}
+              >
+                <Icon as={FiPlus} mr={2} />
+                Agregar producto
+              </Button>
+            </HStack>
           </Stack>
 
           <Modal onClose={onCloseAdd} isOpen={isOpenAdd} isCentered>
@@ -164,6 +200,7 @@ export default function Home() {
             onClose={onClose}
             item={selectedItem}
           />
+
           <CardTableProductos
             title="Productos"
             type="Productos"
